@@ -1,12 +1,9 @@
 ﻿using System.ComponentModel.DataAnnotations;
-using System.ComponentModel.DataAnnotations.Schema;
 
-namespace PetCareAndAdoption.Data
+namespace PetCareAndAdoption.Models
 {
-    [Table("UserInfo")]
-    public class UserInfo
+    public class UserInfoModel
     {
-        [Key]
         [MaxLength(10)]
         public string userID { get; set; }
         public string name { get; set; }
