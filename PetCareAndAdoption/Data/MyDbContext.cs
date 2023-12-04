@@ -11,6 +11,14 @@ namespace PetCareAndAdoption.Data
         }
         #region DbSet
         public DbSet<UserInfo>? Users { get; set; }
-        #endregion 
+        #endregion
+
+        //protected override void OnModelCreating(ModelBuilder modelBuilder)
+        //{
+        //    base.OnModelCreating(modelBuilder);
+        //    modelBuilder.Entity<UserInfo>().HasData(
+        //        new UserInfo { userID = "0393751403", name = "Uyen", address ="TD", password ="Binhaha32:))" }
+        //    );
+        //}
     }
 }

@@ -2,15 +2,9 @@
 
 namespace PetCareAndAdoption.Models.Authentication
 {
-    public class SignUpModel
+    public class ChangePasswordModel
     {
         [Required]
-        public string Name { get; set; } = null!;
-        [Required]
-        public string Address { get; set; } = null!;
-        [Required, Phone]
-        [MinLength(10)]
-        [MaxLength(10)]
         public string PhoneNumber { get; set; } = null!;
         [Required]
         public string Password { get; set; } = null!;

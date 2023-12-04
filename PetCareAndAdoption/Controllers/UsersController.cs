@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -24,6 +25,7 @@ namespace PetCareAndAdoption.Controllers
 
         // GET: api/Users
         [HttpGet]
+        //[Authorize(Policy = "RequireAdminRole")]
         public async Task<IActionResult> GetAllUsers()
         {
             try
@@ -38,6 +40,7 @@ namespace PetCareAndAdoption.Controllers
 
         // GET: api/Users/5
         [HttpGet("{userID}")]
+        //[Authorize(Policy = "RequireAdminRole")]
         public async Task<IActionResult> GetUserInfoByID(string userID)
         {
             var user = await _userRepo.GetUserByUserIdAsync(userID);
@@ -46,40 +49,48 @@ namespace PetCareAndAdoption.Controllers
 
         // PUT: api/Users/5
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
-        [HttpPut("{userID}")]
-        public async Task<IActionResult> UpdateUser(string userID, UserInfoModel model)
-        {
-            if (userID != model.userID)
-            {
-                return NotFound();
-            }
-            await _userRepo.UpdateUserAsync(userID, model);
-            return Ok();
-        }
+        //[HttpPut("{userID}")]
+        //[Authorize]
+        //public async Task<IActionResult> UpdateUser(string userID, UserInfoModel model)
+        //{
+        //    if (userID != model.userID)
+        //    {
+        //        return NotFound();
+        //    }
+        //    await _userRepo.UpdateUserAsync(userID, model);
+        //    return Ok();
+        //}
 
-        // POST: api/Users
-        // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
-        [HttpPost]
-        public async Task<IActionResult> AddNewUsers(UserInfoModel model)
-        {
-            try
-            {
-                var newUserID = await _userRepo.AddUserAsync(model);
-                var user = await _userRepo.GetUserByUserIdAsync(newUserID);
-                return user == null ? NotFound() : Ok(user);
-            }
-            catch
-            {
-                return BadRequest();
-            }
-        }
+        //// POST: api/Users
+        //// To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
+        //[HttpPost]
+        //[Authorize]
+        //public async Task<IActionResult> AddNewUsers(UserInfoModel model)
+        //{
+        //    try
+        //    {
+        //        var newUserID = await _userRepo.AddUserAsync(model);
+        //        var user = await _userRepo.GetUserByUserIdAsync(newUserID);
+        //        return user == null ? NotFound() : Ok(user);
+        //    }
+        //    catch
+        //    {
+        //        return BadRequest();
+        //    }
+        //}
 
         // DELETE: api/Users/5
         [HttpDelete("{userID}")]
+        [Authorize]
         public async Task<IActionResult> DeleteUserInfo(string userID)
         {
-           await _userRepo.DeleteUserAsync(userID);
-            return Ok();
+            var result =  await _userRepo.DeleteUserAsync(userID);
+            if (result.Succeeded)
+            {
+                return Ok();
+
+            }
+            else return BadRequest();   
         }
     }
 }
