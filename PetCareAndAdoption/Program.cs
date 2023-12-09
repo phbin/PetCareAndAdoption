@@ -6,6 +6,8 @@ using Microsoft.OpenApi.Models;
 using PetCareAndAdoption.Data;
 using PetCareAndAdoption.Repositories;
 using PetCareAndAdoption.Repositories.AuthenticationRepositories;
+using PetCareAndAdoption.Repositories.PetTypeRepositories;
+using PetCareAndAdoption.Repositories.PostRepositories;
 using System.Text;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -61,7 +63,8 @@ builder.Services.AddAutoMapper(typeof(Program));
 builder.Services.AddMemoryCache();
 builder.Services.AddScoped<IUserInfoRepository, UserInfoRepository>(); 
 builder.Services.AddScoped<IAccountRepository, AccountRepository>();
-
+builder.Services.AddScoped<IPetTypeRepository, PetTypeRepository>();
+builder.Services.AddScoped<IPostRepository, PostRepository>();
 builder.Services.AddAuthentication(options =>
 {
     options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
@@ -86,15 +89,15 @@ var app = builder.Build();
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
 {
-    
+    app.UseSwagger();
+    app.UseSwaggerUI(c =>
+    {
+        c.SwaggerEndpoint("/swagger/v1/swagger.json", "Pet Care and Adoption API");
+        //c.RoutePrefix = string.Empty;
+    });
 }
 
-app.UseSwagger();
-app.UseSwaggerUI(c =>
-{
-    c.SwaggerEndpoint("/swagger/v1/swagger.json", "Pet Care and Adoption API");
-    c.RoutePrefix = string.Empty;
-});
+
 
 app.UseHttpsRedirection();
 

@@ -81,7 +81,6 @@ namespace PetCareAndAdoption.Controllers
 
         // DELETE: api/Users/5
         [HttpDelete("{userID}")]
-        [Authorize]
         public async Task<IActionResult> DeleteUserInfo(string userID)
         {
             var result =  await _userRepo.DeleteUserAsync(userID);

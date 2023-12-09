@@ -85,7 +85,7 @@ namespace PetCareAndAdoption.Controllers
         [HttpPost("ResetPassword")]
         public async Task<IActionResult> ResetPassword(string phoneNumber, string newPassword)
         {
-            var result = await accountRepo.ConfirmOTPAsync(phoneNumber, newPassword);
+            var result = await accountRepo.ResetPasswordAsync(phoneNumber, newPassword);
 
             if (result.Succeeded)
             {

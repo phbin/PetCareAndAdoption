@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using PetCareAndAdoption.Data;
 
@@ -11,9 +12,10 @@ using PetCareAndAdoption.Data;
 namespace PetCareAndAdoption.Migrations
 {
     [DbContext(typeof(MyDbContext))]
-    partial class MyDbContextModelSnapshot : ModelSnapshot
+    [Migration("20231206150020_AddDataBreeds")]
+    partial class AddDataBreeds
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -246,309 +248,69 @@ namespace PetCareAndAdoption.Migrations
                     b.HasData(
                         new
                         {
-                            breedID = "cfd85b40-0934-4fec-9053-b7acf37bb0bd",
+                            breedID = "cb233460-d4bc-4422-a890-3710e5d08f03",
                             breedName = "Bird",
-                            speciesID = "7a9c0369-d114-49e3-abbb-33d7f05f1571"
+                            speciesID = "d12deb4e-e07d-4178-8e46-0ef65811353d"
                         },
                         new
                         {
-                            breedID = "d2c51bae-140d-419f-b78e-8b4a08bfea5b",
+                            breedID = "265b4eea-33b8-4387-b52d-55b7494e9aef",
                             breedName = "Hamster",
-                            speciesID = "7a9c0369-d114-49e3-abbb-33d7f05f1571"
+                            speciesID = "d12deb4e-e07d-4178-8e46-0ef65811353d"
                         },
                         new
                         {
-                            breedID = "8730de0e-254a-470c-9e74-58822f419d67",
+                            breedID = "6a06df46-3a91-4db7-83c5-ad8e419b2511",
                             breedName = "Chicken",
-                            speciesID = "7a9c0369-d114-49e3-abbb-33d7f05f1571"
+                            speciesID = "d12deb4e-e07d-4178-8e46-0ef65811353d"
                         },
                         new
                         {
-                            breedID = "77da7ca9-f883-4e5e-892d-0e94b54f8709",
+                            breedID = "dccc78d1-63c4-49fc-97a9-41ba98684843",
                             breedName = "Hedgehog",
-                            speciesID = "7a9c0369-d114-49e3-abbb-33d7f05f1571"
+                            speciesID = "d12deb4e-e07d-4178-8e46-0ef65811353d"
                         },
                         new
                         {
-                            breedID = "397efe80-c575-40b9-9829-d7aa1d6ec2d6",
+                            breedID = "1d9948ac-c287-4dc2-a460-5c2d3e76abd5",
                             breedName = "Rabbit",
-                            speciesID = "7a9c0369-d114-49e3-abbb-33d7f05f1571"
+                            speciesID = "d12deb4e-e07d-4178-8e46-0ef65811353d"
                         },
                         new
                         {
-                            breedID = "bc48283d-5e3f-4c7c-a31c-6b44ffc0d907",
+                            breedID = "aac59a3b-a513-42da-a334-9c31aaf7b945",
                             breedName = "Turtle",
-                            speciesID = "7a9c0369-d114-49e3-abbb-33d7f05f1571"
+                            speciesID = "d12deb4e-e07d-4178-8e46-0ef65811353d"
                         },
                         new
                         {
-                            breedID = "81da21ea-7837-4c0a-8ed9-00ffb1267237",
+                            breedID = "44a9c2c2-6900-4090-9601-7b505987a57c",
                             breedName = "Tortoise",
-                            speciesID = "7a9c0369-d114-49e3-abbb-33d7f05f1571"
+                            speciesID = "d12deb4e-e07d-4178-8e46-0ef65811353d"
                         },
                         new
                         {
-                            breedID = "0257502e-86f3-45fa-906d-79cc5fe1a3bd",
+                            breedID = "692ef102-e320-4f14-8a2d-d9ef6ffcaba7",
                             breedName = "Snake",
-                            speciesID = "7a9c0369-d114-49e3-abbb-33d7f05f1571"
+                            speciesID = "d12deb4e-e07d-4178-8e46-0ef65811353d"
                         },
                         new
                         {
-                            breedID = "6c45540c-6736-4bbb-97f3-7b8b3884779f",
+                            breedID = "1cdb0b79-c5ed-4c69-9426-b0f4b6ee90b7",
                             breedName = "Fish",
-                            speciesID = "7a9c0369-d114-49e3-abbb-33d7f05f1571"
+                            speciesID = "d12deb4e-e07d-4178-8e46-0ef65811353d"
                         },
                         new
                         {
-                            breedID = "ef7ecbec-3421-4118-9422-9c9a4206821f",
+                            breedID = "514d6676-cc8f-4bdb-95fa-272e23b7759a",
                             breedName = "Monkey",
-                            speciesID = "7a9c0369-d114-49e3-abbb-33d7f05f1571"
+                            speciesID = "d12deb4e-e07d-4178-8e46-0ef65811353d"
                         },
                         new
                         {
-                            breedID = "51a86e81-e0e2-4e08-a802-20ac246eed74",
+                            breedID = "3555ee7c-b574-4d73-aef8-8df67a11ce6a",
                             breedName = "Others",
-                            speciesID = "7a9c0369-d114-49e3-abbb-33d7f05f1571"
-                        },
-                        new
-                        {
-                            breedID = "ab3783c2-6c2d-4282-9e03-50a3a2b55744",
-                            breedName = "Bulldog",
-                            speciesID = "1f174c8c-7c69-4674-b478-9f1fa9e958af"
-                        },
-                        new
-                        {
-                            breedID = "03577fed-0915-4787-952a-f21becec5ba1",
-                            breedName = "Labrador",
-                            speciesID = "1f174c8c-7c69-4674-b478-9f1fa9e958af"
-                        },
-                        new
-                        {
-                            breedID = "fc85f084-1569-4e16-b11f-f3a295a4982b",
-                            breedName = "Golden Retriever",
-                            speciesID = "1f174c8c-7c69-4674-b478-9f1fa9e958af"
-                        },
-                        new
-                        {
-                            breedID = "9bcb2138-4a16-4c9f-853a-27c31759236d",
-                            breedName = "German Shepherd",
-                            speciesID = "1f174c8c-7c69-4674-b478-9f1fa9e958af"
-                        },
-                        new
-                        {
-                            breedID = "28ca6816-8afb-47c6-8612-f2f4eb8bbef5",
-                            breedName = "Beagle",
-                            speciesID = "1f174c8c-7c69-4674-b478-9f1fa9e958af"
-                        },
-                        new
-                        {
-                            breedID = "5a097716-d63c-45f9-8bf2-97525e706f64",
-                            breedName = "Poodle",
-                            speciesID = "1f174c8c-7c69-4674-b478-9f1fa9e958af"
-                        },
-                        new
-                        {
-                            breedID = "479eb831-f94a-4773-bc32-22043a2fdcde",
-                            breedName = "Boxer",
-                            speciesID = "1f174c8c-7c69-4674-b478-9f1fa9e958af"
-                        },
-                        new
-                        {
-                            breedID = "b71faf1b-6b08-4608-968a-8bad374ec43f",
-                            breedName = "Dachshund",
-                            speciesID = "1f174c8c-7c69-4674-b478-9f1fa9e958af"
-                        },
-                        new
-                        {
-                            breedID = "93bce8b5-3ca0-49d9-b795-f8bb6ab09566",
-                            breedName = "Shih Tzu",
-                            speciesID = "1f174c8c-7c69-4674-b478-9f1fa9e958af"
-                        },
-                        new
-                        {
-                            breedID = "4ee7649c-c733-42c2-9807-a4caad7d6ac8",
-                            breedName = "Siberian Husky",
-                            speciesID = "1f174c8c-7c69-4674-b478-9f1fa9e958af"
-                        },
-                        new
-                        {
-                            breedID = "6b4b80af-5f24-4b16-85ea-30900e502592",
-                            breedName = "Chihuahua",
-                            speciesID = "1f174c8c-7c69-4674-b478-9f1fa9e958af"
-                        },
-                        new
-                        {
-                            breedID = "ff2299fa-caf6-48dd-b9d9-41a154986098",
-                            breedName = "Great Dane",
-                            speciesID = "1f174c8c-7c69-4674-b478-9f1fa9e958af"
-                        },
-                        new
-                        {
-                            breedID = "c96f5f8a-25d5-412f-a9f4-c8db5c3dcd4b",
-                            breedName = "Corgi",
-                            speciesID = "1f174c8c-7c69-4674-b478-9f1fa9e958af"
-                        },
-                        new
-                        {
-                            breedID = "a5cd329c-c35f-4384-9001-0f5fea03d935",
-                            breedName = "Shetland Sheepdog",
-                            speciesID = "1f174c8c-7c69-4674-b478-9f1fa9e958af"
-                        },
-                        new
-                        {
-                            breedID = "b6271f6e-9362-488f-8288-2e2e63231109",
-                            breedName = "Doberman Pinscher",
-                            speciesID = "1f174c8c-7c69-4674-b478-9f1fa9e958af"
-                        },
-                        new
-                        {
-                            breedID = "01ee0b80-60ec-468e-af15-4ab32f2022cb",
-                            breedName = "Basset Hound",
-                            speciesID = "1f174c8c-7c69-4674-b478-9f1fa9e958af"
-                        },
-                        new
-                        {
-                            breedID = "91ecb4ac-b379-4587-8360-d04cbb114d5d",
-                            breedName = "Bernese Mountain Dog",
-                            speciesID = "1f174c8c-7c69-4674-b478-9f1fa9e958af"
-                        },
-                        new
-                        {
-                            breedID = "4dc1132c-665c-47a1-80db-1039abdb04da",
-                            breedName = "Maltese",
-                            speciesID = "1f174c8c-7c69-4674-b478-9f1fa9e958af"
-                        },
-                        new
-                        {
-                            breedID = "d11fa3a6-6145-412e-b85f-60f54cd4623d",
-                            breedName = "Pug",
-                            speciesID = "1f174c8c-7c69-4674-b478-9f1fa9e958af"
-                        },
-                        new
-                        {
-                            breedID = "f92a0604-6e1d-4ac2-934e-d810f67dbc84",
-                            breedName = "Dalmatian",
-                            speciesID = "1f174c8c-7c69-4674-b478-9f1fa9e958af"
-                        },
-                        new
-                        {
-                            breedID = "7cf7df56-0f72-4cf0-b4e5-77b4580b35e7",
-                            breedName = "Persian",
-                            speciesID = "6b35ea48-c99b-4731-99c0-95f263f4db3d"
-                        },
-                        new
-                        {
-                            breedID = "1ea3141f-d755-4200-9f84-cf5570329499",
-                            breedName = "Siamese",
-                            speciesID = "6b35ea48-c99b-4731-99c0-95f263f4db3d"
-                        },
-                        new
-                        {
-                            breedID = "8710d68a-5981-4c0c-bf83-d7a1c7be1f58",
-                            breedName = "Maine Coon",
-                            speciesID = "6b35ea48-c99b-4731-99c0-95f263f4db3d"
-                        },
-                        new
-                        {
-                            breedID = "378ae4ff-942d-42c8-a2f9-e0035427db5f",
-                            breedName = "Ragdoll",
-                            speciesID = "6b35ea48-c99b-4731-99c0-95f263f4db3d"
-                        },
-                        new
-                        {
-                            breedID = "456cc89a-e834-4955-9fb3-4832296a83a5",
-                            breedName = "Bengal",
-                            speciesID = "6b35ea48-c99b-4731-99c0-95f263f4db3d"
-                        },
-                        new
-                        {
-                            breedID = "762b5768-d68a-4456-8f6c-0a840e721ce3",
-                            breedName = "Sphynx",
-                            speciesID = "6b35ea48-c99b-4731-99c0-95f263f4db3d"
-                        },
-                        new
-                        {
-                            breedID = "f63adc4e-a610-4b86-bcfb-c29e5bc6aa1a",
-                            breedName = "Scottish Fold",
-                            speciesID = "6b35ea48-c99b-4731-99c0-95f263f4db3d"
-                        },
-                        new
-                        {
-                            breedID = "3c3a57d8-1d1a-4397-b892-0f77cdcab827",
-                            breedName = "British Shorthair",
-                            speciesID = "6b35ea48-c99b-4731-99c0-95f263f4db3d"
-                        },
-                        new
-                        {
-                            breedID = "88608b6b-3dba-4983-bfa2-43e1bfce63d9",
-                            breedName = "Abyssinian",
-                            speciesID = "6b35ea48-c99b-4731-99c0-95f263f4db3d"
-                        },
-                        new
-                        {
-                            breedID = "a15ca33c-4590-4063-8545-265574947210",
-                            breedName = "Russian Blue",
-                            speciesID = "6b35ea48-c99b-4731-99c0-95f263f4db3d"
-                        },
-                        new
-                        {
-                            breedID = "cbf55df0-6d70-48c0-a458-6843bb1515f7",
-                            breedName = "Burmese",
-                            speciesID = "6b35ea48-c99b-4731-99c0-95f263f4db3d"
-                        },
-                        new
-                        {
-                            breedID = "601fac43-b412-4de0-84a3-798d32539aed",
-                            breedName = "Norwegian Forest",
-                            speciesID = "6b35ea48-c99b-4731-99c0-95f263f4db3d"
-                        },
-                        new
-                        {
-                            breedID = "807917dc-bd43-455f-bfd4-973e4cb2e31e",
-                            breedName = "Egyptian Mau",
-                            speciesID = "6b35ea48-c99b-4731-99c0-95f263f4db3d"
-                        },
-                        new
-                        {
-                            breedID = "6838c16f-e06d-47cf-bc89-067886fe094d",
-                            breedName = "Devon Rex",
-                            speciesID = "6b35ea48-c99b-4731-99c0-95f263f4db3d"
-                        },
-                        new
-                        {
-                            breedID = "f1b2a18f-1cb1-4380-b44b-51beb8fb708a",
-                            breedName = "Balinese",
-                            speciesID = "6b35ea48-c99b-4731-99c0-95f263f4db3d"
-                        },
-                        new
-                        {
-                            breedID = "6796babd-fce8-4bdc-9a82-68eb47abcd96",
-                            breedName = "Oriental Shorthair",
-                            speciesID = "6b35ea48-c99b-4731-99c0-95f263f4db3d"
-                        },
-                        new
-                        {
-                            breedID = "49a547a3-e23c-449a-96c9-24aa48a95db6",
-                            breedName = "Cornish Rex",
-                            speciesID = "6b35ea48-c99b-4731-99c0-95f263f4db3d"
-                        },
-                        new
-                        {
-                            breedID = "e502684c-b19a-47ef-9e26-dbeb091865df",
-                            breedName = "Turkish Angora",
-                            speciesID = "6b35ea48-c99b-4731-99c0-95f263f4db3d"
-                        },
-                        new
-                        {
-                            breedID = "c887a8a4-5eb5-4a63-8a88-efe913c9e7fc",
-                            breedName = "Himalayan",
-                            speciesID = "6b35ea48-c99b-4731-99c0-95f263f4db3d"
-                        },
-                        new
-                        {
-                            breedID = "0beab5f0-c8d2-4a71-aeba-c2004337ee11",
-                            breedName = "Exotic Shorthair",
-                            speciesID = "6b35ea48-c99b-4731-99c0-95f263f4db3d"
+                            speciesID = "d12deb4e-e07d-4178-8e46-0ef65811353d"
                         });
                 });
 
@@ -568,17 +330,17 @@ namespace PetCareAndAdoption.Migrations
                     b.HasData(
                         new
                         {
-                            speciesID = "6b35ea48-c99b-4731-99c0-95f263f4db3d",
+                            speciesID = "0656e083-0979-489b-8326-1f373d058246",
                             speciesName = "Cat"
                         },
                         new
                         {
-                            speciesID = "1f174c8c-7c69-4674-b478-9f1fa9e958af",
+                            speciesID = "c9bbfad5-8140-4e81-bb87-75456d8ac9a1",
                             speciesName = "Dog"
                         },
                         new
                         {
-                            speciesID = "7a9c0369-d114-49e3-abbb-33d7f05f1571",
+                            speciesID = "d12deb4e-e07d-4178-8e46-0ef65811353d",
                             speciesName = "Others"
                         });
                 });

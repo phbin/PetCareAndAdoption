@@ -53,10 +53,7 @@ namespace PetCareAndAdoption.Repositories.AuthenticationRepositories
                 var otp = GenerateRandomOTP();
                 SendOTPToPhoneNumber(phoneNumber, otp);
 
-                // Lưu OTP vào cache hoặc database để kiểm tra sau đó
                 _memoryCache.Set($"ChangePasswordOTP_{phoneNumber}", otp, TimeSpan.FromMinutes(5));
-
-                // Gửi OTP thành công, trả về IdentityResult.Success
                 return IdentityResult.Success;
             }
         }
@@ -72,17 +69,6 @@ namespace PetCareAndAdoption.Repositories.AuthenticationRepositories
                 _memoryCache.Remove($"ChangePasswordOTP_{phoneNumber}");
 
                 return IdentityResult.Success;
-                //var user = await userManager.FindByNameAsync(phoneNumber);
-                //var token = await userManager.GeneratePasswordResetTokenAsync(user);
-                //var result = await userManager.ResetPasswordAsync(user, token, newPassword);
-                //var updateUser = await _context.Users.FirstOrDefaultAsync(u => u.userID == phoneNumber);
-
-                //if (updateUser != null)
-                //{
-                //    updateUser.password = newPassword;
-
-                //    await _context.SaveChangesAsync();
-
             }
             return IdentityResult.Failed(new IdentityError { Description = "Invalid OTP." });
         }
@@ -137,7 +123,7 @@ namespace PetCareAndAdoption.Repositories.AuthenticationRepositories
 
             if (user == null)
             {
-                return string.Empty; // Hoặc trả về thông báo lỗi khác tùy thuộc vào yêu cầu của bạn
+                return string.Empty; 
             }
             var userResponse = new
             {
@@ -219,15 +205,22 @@ namespace PetCareAndAdoption.Repositories.AuthenticationRepositories
 
         private void SendOTPToPhoneNumber(string phoneNumber, string otp)
         {
+            ////Uyen
             //const string accountSid = "ACf491ea26074e7f0f799cbb46b20d0b83";
-            //const string authToken = "79d8aa1246e18483c7214bc6abccd2a3";
-            const string accountSid = "AC513680079082812d0ee20f02315a50ff";
-            const string authToken = "f8139dc7b6c2c4bc8f386fdb66123f12";
+            //const string authToken = "f46a9ffca90f8c87c006dfb9b331a07e";
+            ////Vi
+            //const string accountSid = "AC513680079082812d0ee20f02315a50ff";
+            //const string authToken = "5116bfaaa7277f01d309191758f71ff6";
+            ////Vi 2
+            ///
+            const string accountSid = "AC741bf6d183805ce5cdcbd5cbbc3a9be7";
+            const string authToken = "3e39128f6074480ef1d0e9b71e84680f";
             TwilioClient.Init(accountSid, authToken);
 
             var to = new PhoneNumber(FormatPhoneNumber(phoneNumber));
             //var from = new PhoneNumber("+16622764010");
-            var from = new PhoneNumber("+16627096123");
+            //var from = new PhoneNumber("+16627096123");
+            var from = new PhoneNumber("+17652524219");
 
             var message = MessageResource.Create(
                 body: $"Your verification code for PET CARE AND ADOPTION is: {otp}",

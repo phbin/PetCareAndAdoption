@@ -34,7 +34,7 @@ namespace PetCareAndAdoption.Repositories
 
         public async Task<IdentityResult> DeleteUserAsync(string userID)
         {
-            var user = await userManager.FindByIdAsync(userID);
+            var user = await userManager.FindByNameAsync(userID);
 
             if (user == null)
             {
@@ -46,6 +46,12 @@ namespace PetCareAndAdoption.Repositories
 
             if (result.Succeeded)
             {
+                var deleteUser = _context.Users!.SingleOrDefault(b => b.userID == userID);
+                if (deleteUser != null)
+                {
+                    _context.Users!.Remove(deleteUser);
+                    await _context.SaveChangesAsync();
+                }
                 // Xóa thành công
                 return IdentityResult.Success;
             }
@@ -53,12 +59,6 @@ namespace PetCareAndAdoption.Repositories
             {
                 // Xóa thất bại, trả về thông báo lỗi
                 return result;
-            }
-            var deleteUser = _context.Users!.SingleOrDefault(b => b.userID == userID);
-            if (deleteUser != null)
-            {
-                _context.Users!.Remove(deleteUser);
-                await _context.SaveChangesAsync();
             }
         }
 
