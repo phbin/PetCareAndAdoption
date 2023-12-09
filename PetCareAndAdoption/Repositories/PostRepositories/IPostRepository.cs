@@ -6,11 +6,10 @@ namespace PetCareAndAdoption.Repositories.PostRepositories
 {
     public interface IPostRepository
     {       
-        public Task<string> AddPostAsync(PostAdoptModel model);
-        public Task <string> UpdatePostAsync(string postID, PostAdoptModel model);
+        public Task<string> AddPostAsync(PostModel model);
+        public Task UpdatePostAsync(string postID, PostAdoptModel model);
         public Task<string> DeletePostAsync(string postID);
         public Task<List<PostAdoptModel>> GetAllPostsAsync();
-        public Task<PostAdoptModel> GetPostBySpeciesAsync(string speciesID);
- 
+        public Task<List<PostAdoptModel>> GetPostsBySpeciesAsync(string speciesName);
     }
 }

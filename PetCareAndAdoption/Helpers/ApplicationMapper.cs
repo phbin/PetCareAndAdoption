@@ -20,8 +20,7 @@ namespace PetCareAndAdoption.Helpers
             CreateMap<Species, PetSpeciesModel>().ReverseMap();
      
             CreateMap<Breeds, PetBreedsModel>().ReverseMap();
-            CreateMap<Posts, PostAdoptModel>().ReverseMap();
-
+            CreateMap<PostAdoptModel, Posts>().ReverseMap();
         }
     }
 }

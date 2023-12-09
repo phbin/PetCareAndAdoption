@@ -23,9 +23,7 @@ namespace PetCareAndAdoption.Controllers
             _userRepo = repo;
         }
 
-        // GET: api/Users
         [HttpGet]
-        //[Authorize(Policy = "RequireAdminRole")]
         public async Task<IActionResult> GetAllUsers()
         {
             try
@@ -38,19 +36,14 @@ namespace PetCareAndAdoption.Controllers
             }
         }
 
-        // GET: api/Users/5
         [HttpGet("{userID}")]
-        //[Authorize(Policy = "RequireAdminRole")]
         public async Task<IActionResult> GetUserInfoByID(string userID)
         {
             var user = await _userRepo.GetUserByUserIdAsync(userID);
             return user == null ? NotFound() : Ok(user);
         }
 
-        // PUT: api/Users/5
-        // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         //[HttpPut("{userID}")]
-        //[Authorize]
         //public async Task<IActionResult> UpdateUser(string userID, UserInfoModel model)
         //{
         //    if (userID != model.userID)
@@ -79,7 +72,6 @@ namespace PetCareAndAdoption.Controllers
         //    }
         //}
 
-        // DELETE: api/Users/5
         [HttpDelete("{userID}")]
         public async Task<IActionResult> DeleteUserInfo(string userID)
         {

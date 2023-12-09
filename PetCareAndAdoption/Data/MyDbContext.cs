@@ -15,6 +15,7 @@ namespace PetCareAndAdoption.Data
         public DbSet<UserInfo>? Users { get; set; }
         public DbSet<Species>? Species { get; set; }
         public DbSet<Breeds>? Breeds { get; set; }
+        public DbSet<Posts>? Posts { get; set; }
 
         #endregion
 
