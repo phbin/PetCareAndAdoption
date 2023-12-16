@@ -28,14 +28,18 @@ namespace PetCareAndAdoption.Repositories.PetTypeRepositories
 
         public async Task<List<PetSpeciesModel>> GetAllSpeciesAsync()
         {
-            var species = await _context.Species!.ToListAsync();
+            var species = await _context.Species
+                   .OrderBy(s => s.speciesName )
+                   .ToListAsync(); 
             return _mapper.Map<List<PetSpeciesModel>>(species);
         }
 
-        public async Task<PetBreedsModel> GetBreedBySpeciesIdAsync(string speciesID)
+        public async Task<List<PetBreedsModel>> GetBreedBySpeciesIdAsync(string speciesID)
         {
-            var breeds = await _context.Breeds!.FindAsync(speciesID);
-            return _mapper.Map<PetBreedsModel>(breeds);
+            var breeds = await _context.Breeds
+                    .Where(b => b.Species.speciesID == speciesID)
+                    .ToListAsync();
+            return _mapper.Map<List<PetBreedsModel>>(breeds);
         }
     }
 }

@@ -21,7 +21,7 @@ namespace PetCareAndAdoption.Repositories.PostRepositories
             _context = context;
             _mapper = mapper;
         }
-        public async Task<string> AddPostAsync(PostModel model)
+        public async Task<string> AddPostAsync(PostModel model, List<ImagePostModel> img)
         {
             if (model != null)
             {
@@ -34,17 +34,38 @@ namespace PetCareAndAdoption.Repositories.PostRepositories
                     species = model.species,
                     breed = model.breed,
                     weight = model.weight,
-                    latLocation = model.latLocation,
-                    destLocation = model.destLocation,
-                    nameLocation = model.nameLocation,
+                    district = model.district,
+                    province = model.province,
+                    description = model.description,
                     isVaccinated = model.isVaccinated,
                     isAdopt = model.isAdopt,
-                    targetFee = model.targetFee,
                     userID = model.userID,
                 };
-                var post = _mapper.Map<Posts>(newPost);
-                _context.Posts!.Add(post);
+
+                var postImages = new List<ImageModel>();
+
+                foreach (var i in img)
+                {
+                    var newImage = new ImageModel
+                    {
+                        imgPostID = Guid.NewGuid().ToString(),
+                        postID=newPost.postID,
+                        image=i.image,
+                    };
+                    postImages.Add(newImage);
+
+                }
+                var post = _mapper.Map<PetPosts>(newPost);
+                _context.PetPosts!.Add(post);
                 await _context.SaveChangesAsync();
+
+                foreach (var image in postImages)
+                {
+                    var imgPost = _mapper.Map<ImagePost>(image);
+                    _context.ImagePost!.Add(imgPost);
+                    await _context.SaveChangesAsync();
+
+                }
 
                 return post.postID;
             }
@@ -56,10 +77,10 @@ namespace PetCareAndAdoption.Repositories.PostRepositories
 
         public async Task<string> DeletePostAsync(string postID)
         {
-            var delPost = _context.Posts!.SingleOrDefault(b => b.postID == postID);
+            var delPost = _context.PetPosts!.SingleOrDefault(b => b.postID == postID);
             if (delPost != null)
             {
-                _context.Posts!.Remove(delPost);
+                _context.PetPosts!.Remove(delPost);
                 await _context.SaveChangesAsync();
                 return "Success";
             }
@@ -68,24 +89,44 @@ namespace PetCareAndAdoption.Repositories.PostRepositories
 
         public async Task<List<PostAdoptModel>> GetAllPostsAsync()
         {
-            var posts = await _context.Posts!.ToListAsync();
+            var posts = await _context.PetPosts!.ToListAsync();
             return _mapper.Map<List<PostAdoptModel>>(posts);
+        }
+
+        public async Task<string[]> GetImagesByPostID(string postID)
+        {
+            var posts = await _context.ImagePost
+                          .Where(p => p.postID == postID)
+                          .ToListAsync();
+            if (posts != null && posts.Any())
+            {
+                var imageUrls = posts.Select(p => p.image).ToArray();
+                return imageUrls;
+            }
+
+            return null; 
         }
 
         public async Task<List<PostAdoptModel>> GetPostsBySpeciesAsync(string speciesName)
         {
-            var posts = await _context.Posts
+            var posts = await _context.PetPosts
                .Where(p => p.species == speciesName)
                .ToListAsync();
             return _mapper.Map<List<PostAdoptModel>>(posts);
         }
-
+        public async Task<List<PostAdoptModel>> GetPostsByIDAsync(string postID)
+        {
+            var posts = await _context.PetPosts
+               .Where(p => p.postID == postID)
+               .ToListAsync();
+            return _mapper.Map<List<PostAdoptModel>>(posts);
+        }
         public async Task UpdatePostAsync(string postID, PostAdoptModel model)
         {
             if (postID == model.postID)
             {
-                var updatePost = _mapper.Map<Posts>(model);
-                _context.Posts!.Update(updatePost);
+                var updatePost = _mapper.Map<PetPosts>(model);
+                _context.PetPosts!.Update(updatePost);
                 await _context.SaveChangesAsync();
 
             }

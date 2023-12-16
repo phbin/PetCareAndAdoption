@@ -8,6 +8,6 @@ namespace PetCareAndAdoption.Repositories.PetTypeRepositories
     {
         public Task<List<PetSpeciesModel>> GetAllSpeciesAsync();
         public Task<List<PetBreedsModel>> GetAllBreedsAsync();
-        public Task<PetBreedsModel> GetBreedBySpeciesIdAsync(string speciesID);
+        public Task<List<PetBreedsModel>> GetBreedBySpeciesIdAsync(string speciesID);
     }
 }

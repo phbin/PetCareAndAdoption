@@ -68,20 +68,43 @@ namespace PetCareAndAdoption.Repositories
             return _mapper.Map<List<UserInfoModel>>(users);
         }
 
+        public async Task<string> GetAvatarByUserIdAsync(string userID)
+        {
+            var user = await _context.Users!.FindAsync(userID);
+
+            if (user == null)
+            {
+                return null; 
+            }
+
+            return user.avatar;
+        }
+
         public async Task<UserInfoModel> GetUserByUserIdAsync(string userID)
         {
             var users = await _context.Users!.FindAsync(userID);
             return _mapper.Map<UserInfoModel>(users);
         }
 
-        //public async Task UpdateUserAsync(string userID, UserInfoModel model)
-        //{
-        //    if (userID == model.userID)
-        //    {
-        //        var updateUser = _mapper.Map<UserInfo>(model);
-        //        _context.Users!.Update(updateUser);
-        //        await _context.SaveChangesAsync();
-        //    }
-        //}
+        public async Task UpdateUserAsync(string userID, UpdateUserModel model)
+        {
+            if (userID == model.userID)
+            {
+                // Lấy thông tin người dùng từ cơ sở dữ liệu
+                var existingUser = await _context.Users
+                                          .FirstOrDefaultAsync(u => u.userID == userID);
+
+                if (existingUser != null)
+                {
+                    model.password = existingUser.password;
+
+                    _mapper.Map(model, existingUser);
+
+                    _context.Users.Update(existingUser);
+
+                    await _context.SaveChangesAsync();
+                }
+            }
+        }
     }
 }

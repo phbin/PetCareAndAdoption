@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using PetCareAndAdoption.Data;
 
@@ -11,9 +12,10 @@ using PetCareAndAdoption.Data;
 namespace PetCareAndAdoption.Migrations
 {
     [DbContext(typeof(MyDbContext))]
-    partial class MyDbContextModelSnapshot : ModelSnapshot
+    [Migration("20231210120150_EditImageField")]
+    partial class EditImageField
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -242,32 +244,8 @@ namespace PetCareAndAdoption.Migrations
                     b.ToTable("Breeds");
                 });
 
-            modelBuilder.Entity("PetCareAndAdoption.Data.ImagePost", b =>
-                {
-                    b.Property<string>("imgPostID")
-                        .HasColumnType("nvarchar(450)");
-
-                    b.Property<string>("image")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("postID")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.HasKey("imgPostID");
-
-                    b.ToTable("ImagePost");
-                });
-
             modelBuilder.Entity("PetCareAndAdoption.Data.PetPosts", b =>
                 {
-                    b.Property<string>("postID")
-                        .HasColumnType("nvarchar(450)");
-
-                    b.Property<int>("age")
-                        .HasColumnType("int");
-
                     b.Property<string>("breed")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
@@ -293,6 +271,10 @@ namespace PetCareAndAdoption.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<string>("postID")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<string>("province")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
@@ -312,8 +294,6 @@ namespace PetCareAndAdoption.Migrations
                     b.Property<string>("weight")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
-
-                    b.HasKey("postID");
 
                     b.ToTable("PetPosts");
                 });
@@ -397,11 +377,7 @@ namespace PetCareAndAdoption.Migrations
                         .HasMaxLength(10)
                         .HasColumnType("nvarchar(10)");
 
-                    b.Property<string>("avatar")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("district")
+                    b.Property<string>("address")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
@@ -410,10 +386,6 @@ namespace PetCareAndAdoption.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("password")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("province")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 

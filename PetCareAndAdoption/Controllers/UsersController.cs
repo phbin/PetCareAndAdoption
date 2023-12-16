@@ -42,17 +42,22 @@ namespace PetCareAndAdoption.Controllers
             var user = await _userRepo.GetUserByUserIdAsync(userID);
             return user == null ? NotFound() : Ok(user);
         }
-
-        //[HttpPut("{userID}")]
-        //public async Task<IActionResult> UpdateUser(string userID, UserInfoModel model)
-        //{
-        //    if (userID != model.userID)
-        //    {
-        //        return NotFound();
-        //    }
-        //    await _userRepo.UpdateUserAsync(userID, model);
-        //    return Ok();
-        //}
+        [HttpGet("GetAvatar{userID}")]
+        public async Task<IActionResult> GetAvatarByUserID(string userID)
+        {
+            var rs = await _userRepo.GetAvatarByUserIdAsync(userID);
+            return rs == null ? NotFound() : Ok(rs);
+        }
+        [HttpPut("{userID}")]
+        public async Task<IActionResult> UpdateUser(string userID, UpdateUserModel model)
+        {
+            if (userID != model.userID)
+            {
+                return NotFound();
+            }
+            await _userRepo.UpdateUserAsync(userID, model);
+            return Ok();
+        }
 
         //// POST: api/Users
         //// To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754

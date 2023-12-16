@@ -1,10 +1,7 @@
-﻿using System.ComponentModel.DataAnnotations;
-
-namespace PetCareAndAdoption.Models
+﻿namespace PetCareAndAdoption.Models
 {
-    public class UserInfoModel
+    public class UpdateUserModel
     {
-        [MaxLength(10)]
         public string userID { get; set; }
         public string name { get; set; }
         public string district { get; set; }

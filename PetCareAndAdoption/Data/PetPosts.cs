@@ -1,11 +1,17 @@
-﻿namespace PetCareAndAdoption.Models.Posts
+﻿using Microsoft.EntityFrameworkCore;
+using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
+
+namespace PetCareAndAdoption.Data
 {
-    public class PostAdoptModel
+    [Table("PetPosts")]
+    public class PetPosts
     {
-        public string postID { get; set; }
+        [Key]
+        public string postID { get; set; }       
         public string petName { get; set; }
-        public string sex { get; set; }
         public int age { get; set; }
+        public string sex { get; set; }
         public string species { get; set; }
         public string breed { get; set; }
         public string weight { get; set; }

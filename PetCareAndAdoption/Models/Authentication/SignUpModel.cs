@@ -7,7 +7,8 @@ namespace PetCareAndAdoption.Models.Authentication
         [Required]
         public string Name { get; set; } = null!;
         [Required]
-        public string Address { get; set; } = null!;
+        public string District { get; set; } = null!;
+        public string Province { get; set; } = null!;
         [Required, Phone]
         [MinLength(10)]
         [MaxLength(10)]

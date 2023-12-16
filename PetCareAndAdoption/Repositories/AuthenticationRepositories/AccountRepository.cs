@@ -130,7 +130,9 @@ namespace PetCareAndAdoption.Repositories.AuthenticationRepositories
                 user = new
                 {
                     phoneNumber = user.userID,
-                    address = user.address,
+                    district = user.district,
+                    province=user.province,
+                    avatar = user.avatar,
                     name = user.name,
                 },
                 token = new JwtSecurityTokenHandler().WriteToken(token),

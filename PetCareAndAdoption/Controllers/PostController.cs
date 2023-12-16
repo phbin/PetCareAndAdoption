@@ -18,11 +18,11 @@ namespace PetCareAndAdoption.Controllers
         }
        
         [HttpPost("AddPost")]
-        public async Task<IActionResult> AddPost([FromBody]PostModel model)
+        public async Task<IActionResult> AddPost([FromBody]PostWithImageModel model)
         {
             try
             {
-                var result = await postRepo.AddPostAsync(model);
+                var result = await postRepo.AddPostAsync(model.PostModel, model.Images);
 
                 if (result == "Invalid")
                 {
@@ -94,11 +94,24 @@ namespace PetCareAndAdoption.Controllers
             }
         }
 
-        [HttpGet("{speciesName}")]
+        [HttpGet("GetBySpecies{speciesName}")]
         public async Task<IActionResult> GetPostsBySpecies(string speciesName)
         {
-            var user = await postRepo.GetPostsBySpeciesAsync(speciesName);
-            return user == null ? NotFound() : Ok(user);
+            var result = await postRepo.GetPostsBySpeciesAsync(speciesName);
+            return result == null ? NotFound() : Ok(result);
         }
+        [HttpGet("GetByID{postID}")]
+        public async Task<IActionResult> GetPostsByID(string postID)
+        {
+            var result = await postRepo.GetPostsByIDAsync(postID);
+            return result == null ? NotFound() : Ok(result);
+        }
+        [HttpGet("GetImagesByPosts")]
+        public async Task<IActionResult> GetImagesByPosts(string postID)
+        {
+            var result = await postRepo.GetImagesByPostID(postID);
+            return result == null ? NotFound() : Ok(result);
+        }
+
     }
 }
