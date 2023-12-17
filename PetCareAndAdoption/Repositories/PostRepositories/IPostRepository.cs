@@ -9,9 +9,9 @@ namespace PetCareAndAdoption.Repositories.PostRepositories
         public Task<string> AddPostAsync(PostModel model, List<ImagePostModel> img);
         public Task UpdatePostAsync(string postID, PostAdoptModel model);
         public Task<string> DeletePostAsync(string postID);
-        public Task<List<PostAdoptModel>> GetAllPostsAsync();
+        public Task<List<GetAllPostModel>> GetAllPostsAsync();
         public Task<string[]> GetImagesByPostID(string postID);
         public Task<List<PostAdoptModel>> GetPostsBySpeciesAsync(string speciesName);
-        public Task<List<PostAdoptModel>> GetPostsByIDAsync(string postID);
+        public Task<PostAdoptModel> GetPostsByIDAsync(string postID);
     }
 }

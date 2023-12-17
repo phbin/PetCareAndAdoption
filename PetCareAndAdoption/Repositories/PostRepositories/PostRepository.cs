@@ -2,9 +2,11 @@
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Caching.Memory;
+using Microsoft.Extensions.Hosting;
 using PetCareAndAdoption.Data;
 using PetCareAndAdoption.Models;
 using PetCareAndAdoption.Models.Posts;
+using System.Collections.Concurrent;
 
 namespace PetCareAndAdoption.Repositories.PostRepositories
 {
@@ -87,11 +89,29 @@ namespace PetCareAndAdoption.Repositories.PostRepositories
             return "Remove post failed!";
         }
 
-        public async Task<List<PostAdoptModel>> GetAllPostsAsync()
+        public async Task<List<GetAllPostModel>> GetAllPostsAsync()
         {
-            var posts = await _context.PetPosts!.ToListAsync();
-            return _mapper.Map<List<PostAdoptModel>>(posts);
+            var posts = await _context.PetPosts!
+                             .ToListAsync();
+            var result = new List<GetAllPostModel>();
+            foreach (var post in posts)
+            {
+                var imageEntities = await _context.ImagePost!
+                    .Where(img => img.postID == post.postID)
+                    .ToListAsync();
+                var imageUrls = imageEntities.Select(img => img.image).ToArray();
+
+                var postModel = _mapper.Map<PostAdoptModel>(post);
+
+                result.Add(new GetAllPostModel
+                {
+                    PostAdoptModel = postModel,
+                    Images = imageUrls
+                });
+            }
+            return result;
         }
+
 
         public async Task<string[]> GetImagesByPostID(string postID)
         {
@@ -114,12 +134,12 @@ namespace PetCareAndAdoption.Repositories.PostRepositories
                .ToListAsync();
             return _mapper.Map<List<PostAdoptModel>>(posts);
         }
-        public async Task<List<PostAdoptModel>> GetPostsByIDAsync(string postID)
+        public async Task<PostAdoptModel> GetPostsByIDAsync(string postID)
         {
             var posts = await _context.PetPosts
                .Where(p => p.postID == postID)
-               .ToListAsync();
-            return _mapper.Map<List<PostAdoptModel>>(posts);
+               .FirstOrDefaultAsync();
+            return _mapper.Map<PostAdoptModel>(posts);
         }
         public async Task UpdatePostAsync(string postID, PostAdoptModel model)
         {

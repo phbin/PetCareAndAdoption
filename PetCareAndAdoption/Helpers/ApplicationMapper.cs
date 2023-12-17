@@ -32,6 +32,8 @@ namespace PetCareAndAdoption.Helpers
             CreateMap<PostAdoptModel, PetPosts>().ReverseMap();
             CreateMap<ImageModel, ImagePost>()
                 .ForMember(dest => dest.image, opt => opt.MapFrom(src => src.image));
+            CreateMap<ImagePostModel, ImagePost>()
+                .ForMember(dest => dest.image, opt => opt.MapFrom(src => src.image));
         }
     }
 }
