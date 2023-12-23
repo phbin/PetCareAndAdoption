@@ -9,7 +9,7 @@ using PetCareAndAdoption.Helpers;
 
 namespace PetCareAndAdoption.Bots.Accessories
 {
-    public class BotService:IBot
+    public class BotService : IBot
     {
         private readonly DialogSet dialogs;
 
@@ -42,26 +42,25 @@ namespace PetCareAndAdoption.Bots.Accessories
 
         public async Task OnTurnAsync(ITurnContext turnContext, CancellationToken cancellationToken = default(CancellationToken))
         {
-            if (turnContext.Activity.Type == ActivityTypes.Message)
+
+            // initialize state if necessary
+            //var state = await BotAccessors.FlowerShopStateStateAccessor.GetAsync(turnContext, () => new FlowerShopState(), cancellationToken);
+
+            turnContext.TurnState.Add("BotAccessors", BotAccessors);
+
+            var dialogCtx = await dialogs.CreateContextAsync(turnContext, cancellationToken);
+
+            if (dialogCtx.ActiveDialog == null)
             {
-                // initialize state if necessary
-                //var state = await BotAccessors.FlowerShopStateStateAccessor.GetAsync(turnContext, () => new FlowerShopState(), cancellationToken);
-
-                turnContext.TurnState.Add("BotAccessors", BotAccessors);
-
-                var dialogCtx = await dialogs.CreateContextAsync(turnContext, cancellationToken);
-
-                if (dialogCtx.ActiveDialog == null)
-                {
-                    await dialogCtx.BeginDialogAsync(MainDialog.Id, cancellationToken: cancellationToken);
-                }
-                else
-                {
-                    await dialogCtx.ContinueDialogAsync(cancellationToken);
-                }
-
-                await BotAccessors.ConversationState.SaveChangesAsync(turnContext, false, cancellationToken);
+                await dialogCtx.BeginDialogAsync(MainDialog.Id, cancellationToken: cancellationToken);
             }
+            else
+            {
+                await dialogCtx.ContinueDialogAsync(cancellationToken);
+            }
+
+            await BotAccessors.ConversationState.SaveChangesAsync(turnContext, false, cancellationToken);
+
         }
     }
 }

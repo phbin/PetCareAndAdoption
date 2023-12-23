@@ -59,24 +59,6 @@ namespace PetCareAndAdoption.Controllers
             return Ok();
         }
 
-        //// POST: api/Users
-        //// To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
-        //[HttpPost]
-        //[Authorize]
-        //public async Task<IActionResult> AddNewUsers(UserInfoModel model)
-        //{
-        //    try
-        //    {
-        //        var newUserID = await _userRepo.AddUserAsync(model);
-        //        var user = await _userRepo.GetUserByUserIdAsync(newUserID);
-        //        return user == null ? NotFound() : Ok(user);
-        //    }
-        //    catch
-        //    {
-        //        return BadRequest();
-        //    }
-        //}
-
         [HttpDelete("{userID}")]
         public async Task<IActionResult> DeleteUserInfo(string userID)
         {

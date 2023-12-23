@@ -4,6 +4,7 @@ using PetCareAndAdoption.Models;
 using PetCareAndAdoption.Models.Authentication;
 using PetCareAndAdoption.Models.Pets;
 using PetCareAndAdoption.Models.Posts;
+using PetCareAndAdoption.Models.RequestPost;
 
 namespace PetCareAndAdoption.Helpers
 {
@@ -27,13 +28,32 @@ namespace PetCareAndAdoption.Helpers
          .ForMember(dest => dest.avatar, opt => opt.MapFrom(src => src.avatar));
 
             CreateMap<Species, PetSpeciesModel>().ReverseMap();
-     
             CreateMap<Breeds, PetBreedsModel>().ReverseMap();
+
             CreateMap<PostAdoptModel, PetPosts>().ReverseMap();
-            CreateMap<ImageModel, ImagePost>()
-                .ForMember(dest => dest.image, opt => opt.MapFrom(src => src.image));
+            CreateMap<PetCareAndAdoption.Models.Posts.ImageModel, ImagePost>().ReverseMap();
             CreateMap<ImagePostModel, ImagePost>()
                 .ForMember(dest => dest.image, opt => opt.MapFrom(src => src.image));
+
+            CreateMap<PetInfoModel, MyPets>().ReverseMap();
+            CreateMap<PetCareAndAdoption.Models.Pets.ImageModel, PetImages>().ReverseMap();
+            CreateMap<ImagePetModel, PetImages>()
+                .ForMember(dest => dest.image, opt => opt.MapFrom(src => src.image));
+
+            CreateMap<HistoryVaccineTableModel, HistoryVaccine>().ReverseMap();
+            CreateMap<HistoryVaccineModel, HistoryVaccine>()
+                .ForMember(dest => dest.date, opt => opt.MapFrom(src => src.date))
+                .ForMember(dest => dest.note, opt => opt.MapFrom(src => src.note));
+
+            CreateMap<NextVaccineTableModel, NextVaccine>().ReverseMap();
+            CreateMap<NextVaccineModel, NextVaccine>()
+                .ForMember(dest => dest.date, opt => opt.MapFrom(src => src.date))
+                .ForMember(dest => dest.note, opt => opt.MapFrom(src => src.note));
+
+            CreateMap<UserRequestModel, UserRequest>().ReverseMap();
+            CreateMap<UserModel, UserRequest>()
+                .ForMember(dest => dest.userID, opt => opt.MapFrom(src => src.userID));
+
         }
     }
 }

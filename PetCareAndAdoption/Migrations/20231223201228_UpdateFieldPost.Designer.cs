@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using PetCareAndAdoption.Data;
 
@@ -11,9 +12,10 @@ using PetCareAndAdoption.Data;
 namespace PetCareAndAdoption.Migrations
 {
     [DbContext(typeof(MyDbContext))]
-    partial class MyDbContextModelSnapshot : ModelSnapshot
+    [Migration("20231223201228_UpdateFieldPost")]
+    partial class UpdateFieldPost
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -397,10 +399,6 @@ namespace PetCareAndAdoption.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("province")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("receiverID")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 

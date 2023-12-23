@@ -27,7 +27,6 @@ namespace PetCareAndAdoption.Repositories.PostRepositories
         {
             if (model != null)
             {
-                // Mã OTP đúng, tiếp tục với quá trình đăng ký
                 var newPost = new PostAdoptModel
                 {
                     postID = Guid.NewGuid().ToString(),
@@ -35,6 +34,7 @@ namespace PetCareAndAdoption.Repositories.PostRepositories
                     sex = model.sex,
                     species = model.species,
                     breed = model.breed,
+                    age = model.age,
                     weight = model.weight,
                     district = model.district,
                     province = model.province,
@@ -42,6 +42,7 @@ namespace PetCareAndAdoption.Repositories.PostRepositories
                     isVaccinated = model.isVaccinated,
                     isAdopt = model.isAdopt,
                     userID = model.userID,
+                    receiverID = "",
                 };
 
                 var postImages = new List<ImageModel>();
@@ -92,7 +93,8 @@ namespace PetCareAndAdoption.Repositories.PostRepositories
         public async Task<List<GetAllPostModel>> GetAllPostsAsync()
         {
             var posts = await _context.PetPosts!
-                             .ToListAsync();
+                .Where(post => !post.isDone)
+                .ToListAsync();
             var result = new List<GetAllPostModel>();
             foreach (var post in posts)
             {
@@ -101,12 +103,18 @@ namespace PetCareAndAdoption.Repositories.PostRepositories
                     .ToListAsync();
                 var imageUrls = imageEntities.Select(img => img.image).ToArray();
 
+                var request = await _context.UserRequest!
+                   .Where(img => img.postID == post.postID)
+                   .ToListAsync();
+                var requestUser = request.Select(img => img.userID).ToArray();
+
                 var postModel = _mapper.Map<PostAdoptModel>(post);
 
                 result.Add(new GetAllPostModel
                 {
                     PostAdoptModel = postModel,
-                    Images = imageUrls
+                    Images = imageUrls,
+                    request=requestUser
                 });
             }
             return result;
@@ -115,7 +123,7 @@ namespace PetCareAndAdoption.Repositories.PostRepositories
 
         public async Task<string[]> GetImagesByPostID(string postID)
         {
-            var posts = await _context.ImagePost
+            var posts = await _context.ImagePost!
                           .Where(p => p.postID == postID)
                           .ToListAsync();
             if (posts != null && posts.Any())
@@ -129,14 +137,14 @@ namespace PetCareAndAdoption.Repositories.PostRepositories
 
         public async Task<List<PostAdoptModel>> GetPostsBySpeciesAsync(string speciesName)
         {
-            var posts = await _context.PetPosts
+            var posts = await _context.PetPosts!
                .Where(p => p.species == speciesName)
                .ToListAsync();
             return _mapper.Map<List<PostAdoptModel>>(posts);
         }
         public async Task<PostAdoptModel> GetPostsByIDAsync(string postID)
         {
-            var posts = await _context.PetPosts
+            var posts = await _context.PetPosts!
                .Where(p => p.postID == postID)
                .FirstOrDefaultAsync();
             return _mapper.Map<PostAdoptModel>(posts);
@@ -150,6 +158,213 @@ namespace PetCareAndAdoption.Repositories.PostRepositories
                 await _context.SaveChangesAsync();
 
             }
+        }
+
+        public async Task RequestAdoption(string postID, string userID)
+        {
+            var request = new UserRequest
+            {
+                 requestID= Guid.NewGuid().ToString(),
+                postID = postID,
+                userID = userID
+            };
+
+            _context.UserRequest!.Add(request);
+            await _context.SaveChangesAsync();
+        }
+
+        public async Task<List<AllRequestPostModel>> GetAllRequestPostAsync(string userID)
+        {
+            var postIDs = await _context.UserRequest!
+                .Where(request => request.userID == userID)
+                .Select(request => request.postID)
+                .ToListAsync();
+
+            var posts = await _context.PetPosts!
+                .Where(post => postIDs.Contains(post.postID))
+                .ToListAsync();
+
+            var result = new List<AllRequestPostModel>();
+
+            foreach (var post in posts)
+            {
+                var imageEntities = await _context.ImagePost!
+                    .Where(img => img.postID == post.postID)
+                    .ToListAsync();
+                var imageUrls = imageEntities.Select(img => img.image).ToArray();
+
+                var postModel = _mapper.Map<PostAdoptModel>(post);
+
+                result.Add(new AllRequestPostModel
+                {
+                    PostAdoptModel = postModel,
+                    Images = imageUrls
+                });
+            }
+
+            return result;
+        }
+
+        public async Task<List<GetAllPostModel>> GetAllPostsAsync(string userID)
+        {
+            var posts = await _context.PetPosts!
+                .Where(post => !post.isDone)
+                .ToListAsync();
+            var result = new List<GetAllPostModel>();
+
+            foreach (var post in posts)
+            {
+                var isPostInUserRequest = await _context.UserRequest!
+                    .AnyAsync(ur => ur.postID == post.postID && ur.userID == userID);
+
+                if (isPostInUserRequest)
+                {
+                    continue;
+                }
+
+                var imageEntities = await _context.ImagePost!
+                    .Where(img => img.postID == post.postID)
+                    .ToListAsync();
+                var imageUrls = imageEntities.Select(img => img.image).ToArray();
+
+                var request = await _context.UserRequest!
+                   .Where(img => img.postID == post.postID)
+                   .ToListAsync();
+                var requestUser = request.Select(img => img.userID).ToArray();
+
+                var postModel = _mapper.Map<PostAdoptModel>(post);
+
+                result.Add(new GetAllPostModel
+                {
+                    PostAdoptModel = postModel,
+                    Images = imageUrls,
+                    request = requestUser
+                });
+            }
+
+            return result;
+        }
+
+        public async Task<string> AcceptUserAsync(string postID, string receiverID)
+        {
+            try
+            {
+                var userRequests = await _context.UserRequest!
+                    .Where(ur => ur.postID == postID)
+                    .ToListAsync();
+
+                if (userRequests.Any())
+                {
+                    _context.UserRequest!.RemoveRange(userRequests);
+
+                    var petPost = await _context.PetPosts!
+                        .SingleOrDefaultAsync(post => post.postID == postID);
+
+                    if (petPost != null)
+                    {
+                        petPost.isDone = true;
+                        petPost.receiverID = receiverID;
+
+                        await _context.SaveChangesAsync();
+
+                        return "Success";
+                    }
+                    else
+                    {
+                        return "PetPost not found!";
+                    }
+                }
+                else
+                {
+                    return "No matching UserRequest records found.";
+                }
+            }
+            catch (Exception ex)
+            {
+                return "An error occurred while processing the request.";
+            }
+        }
+
+
+        public async Task<string> RejectPostAsync(string postID, string userID)
+        {
+            var userRequest = await _context.UserRequest!
+                .SingleOrDefaultAsync(ur => ur.postID == postID && ur.userID == userID);
+
+            if (userRequest != null)
+            {
+                _context.UserRequest!.Remove(userRequest);
+                await _context.SaveChangesAsync();
+                return "Success";
+            }
+
+            return "Remove post failed!";
+        }
+
+        public async Task<List<AllRequestPostModel>> GetAllReceivedPostAsync(string userID)
+        {
+            var posts = await _context.PetPosts!
+                .Where(post => post.isDone && post.receiverID == userID)
+                .ToListAsync();
+
+            var result = new List<AllRequestPostModel>();
+
+            foreach (var post in posts)
+            {
+                var imageEntities = await _context.ImagePost!
+                    .Where(img => img.postID == post.postID)
+                    .ToListAsync();
+                var imageUrls = imageEntities.Select(img => img.image).ToArray();
+
+                var postModel = _mapper.Map<PostAdoptModel>(post);
+
+                result.Add(new AllRequestPostModel
+                {
+                    PostAdoptModel = postModel,
+                    Images = imageUrls
+                });
+            }
+
+            return result;
+        }
+
+        public async Task<List<PostIDWithRequestModel>> GetPostsWithRequestAsync(string userID)
+        {
+            var postIDs = await GetPostIDsByUserAsync(userID);
+
+            var posts = await _context.PetPosts!
+                .Where(post => postIDs.Contains(post.postID) && !post.isDone && post.userID == userID)
+                .ToListAsync();
+
+            var result = new List<PostIDWithRequestModel>();
+
+            foreach (var post in posts)
+            {
+                var request = await _context.UserRequest!
+                    .Where(ur => ur.postID == post.postID)
+                    .ToListAsync();
+
+                var requestUser = request != null ? request.Select(ur => ur.userID).ToArray() : null;
+
+                result.Add(new PostIDWithRequestModel
+                {
+                    postID = post.postID,
+                    request=requestUser
+                });
+            
+            }
+
+            return result;
+        }
+
+        public async Task<List<string>> GetPostIDsByUserAsync(string userID)
+        {
+            var postIDs = await _context.PetPosts!
+                .Where(user => user.userID == userID)
+                .Select(request => request.postID)
+                .ToListAsync();
+
+            return postIDs;
         }
     }
 }

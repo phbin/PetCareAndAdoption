@@ -18,6 +18,11 @@ namespace PetCareAndAdoption.Data
         public DbSet<Posts>? Posts { get; set; }
         public DbSet<PetPosts>? PetPosts { get; set; }
         public DbSet<ImagePost>? ImagePost { get; set; }
+        public DbSet<MyPets>? MyPets { get; set; }
+        public DbSet<PetImages>? PetImages { get; set; }
+        public DbSet<HistoryVaccine>? HistoryVaccine { get; set; }
+        public DbSet<NextVaccine>? NextVaccine { get; set; }
+        public DbSet<UserRequest>? UserRequest { get; set; }
 
         #endregion
 

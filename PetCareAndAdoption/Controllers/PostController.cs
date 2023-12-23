@@ -112,6 +112,106 @@ namespace PetCareAndAdoption.Controllers
             var result = await postRepo.GetImagesByPostID(postID);
             return result == null ? NotFound() : Ok(result);
         }
+        [HttpPost("RequestAdoption")]
+        public async Task<IActionResult> RequestAdoption(string postID, string userRequest)
+        {
+            try
+            {
+                await postRepo.RequestAdoption(postID, userRequest);
 
+                return Ok("Adoption request sent successfully");
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, "Internal Server Error");
+            }
+        }
+        [HttpGet("GetRequestPosts")]
+        public async Task<IActionResult> GetPostsByRequestUser([FromQuery] string userID)
+        {
+            try
+            {
+                var posts = await postRepo.GetAllRequestPostAsync(userID);
+                return Ok(posts);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, "Internal Server Error");
+            }
+        }
+        [HttpGet("GetReceivedPosts")]
+        public async Task<IActionResult> GetReceivedPosts([FromQuery] string userID)
+        {
+            try
+            {
+                var posts = await postRepo.GetAllReceivedPostAsync(userID);
+                return Ok(posts);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, "Internal Server Error");
+            }
+        }
+        [HttpGet("GetAllPostsWithUser")]
+        public async Task<IActionResult> GetAllPostsWithUser([FromQuery] string userID)
+        {
+            try
+            {
+                var posts = await postRepo.GetAllPostsAsync(userID);
+                return Ok(posts);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, "Internal Server Error");
+            }
+        }
+        [HttpPost("RejectUser")]
+        public async Task<IActionResult> RejectPost([FromQuery] string postID, [FromQuery] string userID)
+        {
+            try
+            {
+                var result = await postRepo.RejectPostAsync(postID, userID);
+                return Ok(result);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, "Internal Server Error");
+            }
+        }
+        [HttpPost("AcceptUser")]
+        public async Task<IActionResult> AcceptUser(string postID, string receiverID)
+        {
+            try
+            {
+                var result = await postRepo.AcceptUserAsync(postID, receiverID);
+
+                if (result == "Success")
+                {
+                    return Ok(new { Message = "User accepted successfully." });
+                }
+                else
+                {
+                    return BadRequest(new { Message = result });
+                }
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, new { Message = "Internal Server Error" });
+            }
+        }
+        [HttpGet("PostsWithRequest")]
+        public async Task<IActionResult> GetPostsWithRequestByUserAsync(string userID)
+        {
+            try
+            {
+                var result = await postRepo.GetPostsWithRequestAsync(userID);
+
+                return Ok(result);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, "An error occurred while processing the request");
+            }
+        }
     }
 }

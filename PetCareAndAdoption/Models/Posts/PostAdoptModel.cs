@@ -16,5 +16,6 @@
         public bool isAdopt { get; set; }
         public bool isDone { get; set; }
         public string userID { get; set; }
+        public string receiverID { get; set; }
     }
 }
