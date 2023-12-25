@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Identity;
 using PetCareAndAdoption.Models;
 using PetCareAndAdoption.Models.Posts;
+using UserInfoModel = PetCareAndAdoption.Models.Posts.UserInfoModel;
 
 namespace PetCareAndAdoption.Repositories.PostRepositories
 {
@@ -21,6 +22,7 @@ namespace PetCareAndAdoption.Repositories.PostRepositories
         public Task<string> RejectPostAsync(string postID, string userID);
         public Task<List<PostIDWithRequestModel>> GetPostsWithRequestAsync(string userID);
         public Task<List<string>> GetPostIDsByUserAsync(string userID);
-
+        public Task<string> CancelRequest(string postID, string userID);
+        public Task<UserInfoModel> GetUser(string userID);
     }
 }

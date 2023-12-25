@@ -215,14 +215,19 @@ namespace PetCareAndAdoption.Repositories.AuthenticationRepositories
             //const string authToken = "5116bfaaa7277f01d309191758f71ff6";
             ////Vi 2
             ///
-            const string accountSid = "AC741bf6d183805ce5cdcbd5cbbc3a9be7";
-            const string authToken = "3e39128f6074480ef1d0e9b71e84680f";
+            //const string accountSid = "AC741bf6d183805ce5cdcbd5cbbc3a9be7";
+            //const string authToken = "3e39128f6074480ef1d0e9b71e84680f";
+            ////PHH
+            ///
+            const string accountSid = "ACc948172b2fa92dd7f8ce8739397c41ca";
+            const string authToken = "484b1d4c8f6072dc7de62b48945e09f1";
             TwilioClient.Init(accountSid, authToken);
 
-            var to = new PhoneNumber(FormatPhoneNumber(phoneNumber));
+            var to = new PhoneNumber("+84339820586");
             //var from = new PhoneNumber("+16622764010");
             //var from = new PhoneNumber("+16627096123");
-            var from = new PhoneNumber("+17652524219");
+            //var from = new PhoneNumber("+17652524219");
+            var from = new PhoneNumber("+16505294558");
 
             var message = MessageResource.Create(
                 body: $"Your verification code for PET CARE AND ADOPTION is: {otp}",
@@ -233,15 +238,12 @@ namespace PetCareAndAdoption.Repositories.AuthenticationRepositories
 
         private string FormatPhoneNumber(string phoneNumber)
         {
-            // Kiểm tra xem số điện thoại có bắt đầu bằng "0" không
             if (phoneNumber.StartsWith("0"))
             {
-                // Nếu có, thay thế "0" bằng "+84"
                 return $"+84{phoneNumber.Substring(1)}";
             }
             else
             {
-                // Nếu không, thêm "+84" vào đầu số điện thoại
                 return $"+84{phoneNumber}";
             }
         }

@@ -7,6 +7,7 @@ using PetCareAndAdoption.Data;
 using PetCareAndAdoption.Models;
 using PetCareAndAdoption.Models.Posts;
 using System.Collections.Concurrent;
+using UserInfoModel = PetCareAndAdoption.Models.Posts.UserInfoModel;
 
 namespace PetCareAndAdoption.Repositories.PostRepositories
 {
@@ -52,8 +53,8 @@ namespace PetCareAndAdoption.Repositories.PostRepositories
                     var newImage = new ImageModel
                     {
                         imgPostID = Guid.NewGuid().ToString(),
-                        postID=newPost.postID,
-                        image=i.image,
+                        postID = newPost.postID,
+                        image = i.image,
                     };
                     postImages.Add(newImage);
 
@@ -114,7 +115,7 @@ namespace PetCareAndAdoption.Repositories.PostRepositories
                 {
                     PostAdoptModel = postModel,
                     Images = imageUrls,
-                    request=requestUser
+                    request = requestUser
                 });
             }
             return result;
@@ -132,7 +133,7 @@ namespace PetCareAndAdoption.Repositories.PostRepositories
                 return imageUrls;
             }
 
-            return null; 
+            return null;
         }
 
         public async Task<List<PostAdoptModel>> GetPostsBySpeciesAsync(string speciesName)
@@ -164,7 +165,7 @@ namespace PetCareAndAdoption.Repositories.PostRepositories
         {
             var request = new UserRequest
             {
-                 requestID= Guid.NewGuid().ToString(),
+                requestID = Guid.NewGuid().ToString(),
                 postID = postID,
                 userID = userID
             };
@@ -185,7 +186,6 @@ namespace PetCareAndAdoption.Repositories.PostRepositories
                 .ToListAsync();
 
             var result = new List<AllRequestPostModel>();
-
             foreach (var post in posts)
             {
                 var imageEntities = await _context.ImagePost!
@@ -194,10 +194,12 @@ namespace PetCareAndAdoption.Repositories.PostRepositories
                 var imageUrls = imageEntities.Select(img => img.image).ToArray();
 
                 var postModel = _mapper.Map<PostAdoptModel>(post);
+                var user = await GetUser(postModel.userID);
 
                 result.Add(new AllRequestPostModel
                 {
                     PostAdoptModel = postModel,
+                    UserInfo = user,
                     Images = imageUrls
                 });
             }
@@ -298,7 +300,7 @@ namespace PetCareAndAdoption.Repositories.PostRepositories
                 return "Success";
             }
 
-            return "Remove post failed!";
+            throw new InvalidOperationException("Remove post failed!");
         }
 
         public async Task<List<AllRequestPostModel>> GetAllReceivedPostAsync(string userID)
@@ -341,17 +343,39 @@ namespace PetCareAndAdoption.Repositories.PostRepositories
             foreach (var post in posts)
             {
                 var request = await _context.UserRequest!
-                    .Where(ur => ur.postID == post.postID)
-                    .ToListAsync();
+                  .Where(ur => ur.postID == post.postID && !string.IsNullOrEmpty(ur.userID))
+                  .ToListAsync();
 
-                var requestUser = request != null ? request.Select(ur => ur.userID).ToArray() : null;
 
-                result.Add(new PostIDWithRequestModel
+                if (request.Any())
                 {
-                    postID = post.postID,
-                    request=requestUser
-                });
-            
+                    var requestUser = request.Select(ur => ur.userID).ToArray();
+                    var users = new List<UserRequestModel>();
+
+                    foreach (var userId in requestUser)
+                    {
+                        var user = await GetUser(userId);
+                        users.Add(new UserRequestModel
+                        {
+                            userID = userId,
+                            name=user.name,
+                            avatar=user.avatar
+                        });
+                    }
+                    var imageEntities = await _context.ImagePost!
+                    .Where(img => img.postID == post.postID)
+                    .ToListAsync();
+                    var imageUrls = imageEntities.Select(img => img.image).ToArray();
+
+                    result.Add(new PostIDWithRequestModel
+                    {
+                        postID = _mapper.Map<PostAdoptModel>(post),
+                        Images= imageUrls,
+                        request = users
+                    });
+
+                }
+
             }
 
             return result;
@@ -365,6 +389,41 @@ namespace PetCareAndAdoption.Repositories.PostRepositories
                 .ToListAsync();
 
             return postIDs;
+        }
+
+        public async Task<string> CancelRequest(string postID, string userID)
+        {
+            try
+            {
+                var userRequest = await _context.UserRequest!
+                    .FirstOrDefaultAsync(ur => ur.postID == postID && ur.userID == userID);
+
+                if (userRequest != null)
+                {
+                    _context.UserRequest!.Remove(userRequest);
+                    await _context.SaveChangesAsync();
+                    return "Success";
+                }
+
+                return "Cancel request post failed! User request not found.";
+            }
+            catch (Exception ex)
+            {
+                return $"An error occurred: {ex.Message}";
+            }
+        }
+
+        public async Task<Models.Posts.UserInfoModel> GetUser(string userID)
+        {
+            var postIDs = await _context.Users!
+                           .Where(user => user.userID == userID)
+                           .FirstOrDefaultAsync();
+            var user = new UserInfoModel
+            {
+                name = postIDs.name,
+                avatar = postIDs.avatar
+            };
+            return user;
         }
     }
 }

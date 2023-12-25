@@ -9,7 +9,7 @@ using PetCareAndAdoption.Helpers;
 
 namespace PetCareAndAdoption.Bots.Accessories
 {
-    public class BotService : IBot
+    public class BotService:IBot
     {
         private readonly DialogSet dialogs;
 
@@ -39,28 +39,45 @@ namespace PetCareAndAdoption.Bots.Accessories
 
         public BotAccessors BotAccessors { get; }
 
-
-        public async Task OnTurnAsync(ITurnContext turnContext, CancellationToken cancellationToken = default(CancellationToken))
+   public async Task OnTurnAsync(ITurnContext turnContext, CancellationToken cancellationToken = default)
         {
-
-            // initialize state if necessary
-            //var state = await BotAccessors.FlowerShopStateStateAccessor.GetAsync(turnContext, () => new FlowerShopState(), cancellationToken);
-
-            turnContext.TurnState.Add("BotAccessors", BotAccessors);
-
-            var dialogCtx = await dialogs.CreateContextAsync(turnContext, cancellationToken);
-
-            if (dialogCtx.ActiveDialog == null)
+            if (turnContext.Activity.Type == ActivityTypes.Message)
             {
-                await dialogCtx.BeginDialogAsync(MainDialog.Id, cancellationToken: cancellationToken);
-            }
-            else
-            {
-                await dialogCtx.ContinueDialogAsync(cancellationToken);
+                var dialogCtx = await dialogs.CreateContextAsync(turnContext, cancellationToken);
+
+                if (dialogCtx.ActiveDialog == null)
+                {
+                    await dialogCtx.BeginDialogAsync(MainDialog.Id, cancellationToken: cancellationToken);
+                }
+                else
+                {
+                    await dialogCtx.ContinueDialogAsync(cancellationToken);
+                }
+
+                await BotAccessors.ConversationState.SaveChangesAsync(turnContext, false, cancellationToken);
             }
 
-            await BotAccessors.ConversationState.SaveChangesAsync(turnContext, false, cancellationToken);
+            //if (turnContext.Activity.Type == ActivityTypes.ConversationUpdate)
+            //{           
+            //    var dialogCtx = await dialogs.CreateContextAsync(turnContext, cancellationToken);
 
+            //    var activity = turnContext.Activity.AsConversationUpdateActivity();
+            //    if (activity.MembersAdded != null)
+            //    {
+            //        foreach (var member in activity.MembersAdded)
+            //        {
+            //            if (member.Id != turnContext.Activity.Recipient.Id)
+            //            {
+            //                 await dialogCtx.BeginDialogAsync(MainDialog.Id, cancellationToken: cancellationToken);
+
+            //                // Bot chào mừng khi được thêm vào cuộc trò chuyện
+            //                //await turnContext.SendActivityAsync($"Hello {member.Name}! How can I help you?");
+            //            }
+            //        }
+            //    }
+            //      await BotAccessors.ConversationState.SaveChangesAsync(turnContext, false, cancellationToken);
+
+            //}
         }
     }
 }

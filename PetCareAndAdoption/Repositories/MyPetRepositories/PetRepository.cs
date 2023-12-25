@@ -116,9 +116,9 @@ namespace PetCareAndAdoption.Repositories.MyPetRepositories
             }
         }
 
-        public async Task<string> DeletePetAsync(string petID)
+        public async Task<string> DeletePetAsync(string userID, string petID)
         {
-            var delPet = _context.MyPets!.SingleOrDefault(b => b.petID == petID);
+            var delPet = _context.MyPets!.SingleOrDefault(b => b.petID == petID && b.userID==userID);
             if (delPet != null)
             {
                 _context.MyPets!.Remove(delPet);
@@ -167,15 +167,110 @@ namespace PetCareAndAdoption.Repositories.MyPetRepositories
             return result;
         }
 
-        //public async Task UpdatePetAsync(string petID, PetInfoModel model)
-        //{
-        //    if (petID == model.petID)
-        //    {
-        //        var updatePet = _mapper.Map<MyPets>(model);
-        //        _context.MyPets!.Update(updatePet);
-        //        await _context.SaveChangesAsync();
+        public async Task<string> UpdatePetAsync(string petID, PetModel model, List<ImagePetModel> img, List<HistoryVaccineModel> his, List<NextVaccineModel> next)
+        {
+            if (model != null)
+            {
+                var existingPet = await _context.MyPets!.FirstOrDefaultAsync(p => p.petID == petID);
 
-        //    }
-        //}
+                if (existingPet != null)
+                {
+                    // Update pet details
+                    existingPet.petName = model.petName;
+                    existingPet.sex = model.sex;
+                    existingPet.species = model.species;
+                    existingPet.breed = model.breed;
+                    existingPet.age = model.age;
+                    existingPet.weight = model.weight;
+                    existingPet.description = model.description;
+
+                    // Update pet images
+                    var petImages = new List<ImageModel>();
+                    foreach (var i in img)
+                    {
+                        var newImage = new PetCareAndAdoption.Models.Pets.ImageModel
+                        {
+                            imgPetID = Guid.NewGuid().ToString(),
+                            petID = existingPet.petID,
+                            image = i.image,
+                        };
+                        petImages.Add(newImage);
+                    }
+
+                    // Remove existing images
+                    var existingImages = await _context.PetImages!.Where(pi => pi.petID == petID).ToListAsync();
+                    _context.PetImages!.RemoveRange(existingImages);
+
+                    // Add new images
+                    foreach (var image in petImages)
+                    {
+                        var imgPet = _mapper.Map<PetImages>(image);
+                        _context.PetImages!.Add(imgPet);
+                    }
+
+                    // Update vaccine history
+                    var history = new List<HistoryVaccineTableModel>();
+                    foreach (var i in his)
+                    {
+                        var newHis = new HistoryVaccineTableModel
+                        {
+                            historyVaccineID = Guid.NewGuid().ToString(),
+                            petID = existingPet.petID,
+                            date = i.date,
+                            note = i.note,
+                        };
+                        history.Add(newHis);
+                    }
+
+                    // Remove existing history
+                    var existingHistory = await _context.HistoryVaccine!.Where(h => h.petID == petID).ToListAsync();
+                    _context.HistoryVaccine!.RemoveRange(existingHistory);
+
+                    // Add new history
+                    foreach (var i in history)
+                    {
+                        var hisPet = _mapper.Map<HistoryVaccine>(i);
+                        _context.HistoryVaccine.Add(hisPet);
+                    }
+
+                    // Update next vaccine
+                    var nextVaccine = new List<NextVaccineTableModel>();
+                    foreach (var i in next)
+                    {
+                        var newNext = new NextVaccineTableModel
+                        {
+                            nextVaccineID = Guid.NewGuid().ToString(),
+                            petID = existingPet.petID,
+                            date = i.date,
+                            note = i.note,
+                        };
+                        nextVaccine.Add(newNext);
+                    }
+
+                    // Remove existing next vaccine
+                    var existingNextVaccine = await _context.NextVaccine.Where(n => n.petID == petID).ToListAsync();
+                    _context.NextVaccine.RemoveRange(existingNextVaccine);
+
+                    // Add new next vaccine
+                    foreach (var i in nextVaccine)
+                    {
+                        var nextPet = _mapper.Map<NextVaccine>(i);
+                        _context.NextVaccine.Add(nextPet);
+                    }
+
+                    await _context.SaveChangesAsync();
+
+                    return petID;
+                }
+                else
+                {
+                    return "Pet not found";
+                }
+            }
+            else
+            {
+                return "Invalid model";
+            }
+        }
     }
 }

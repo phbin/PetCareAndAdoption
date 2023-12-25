@@ -1,5 +1,7 @@
 ﻿using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.JsonPatch;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using PetCareAndAdoption.Models.Pets;
 using PetCareAndAdoption.Repositories.MyPetRepositories;
 
@@ -41,8 +43,8 @@ namespace PetCareAndAdoption.Controllers
 
   
 
-        [HttpDelete("{petID}")]
-        public async Task<IActionResult> DeletePost(string petID)
+        [HttpDelete("RemovePet/{userID}/{petID}")]
+        public async Task<IActionResult> DeletePost(string userID, string petID)
         {
             try
             {
@@ -51,7 +53,7 @@ namespace PetCareAndAdoption.Controllers
                     return BadRequest("Invalid postID");
                 }
 
-                var result = await petRepo.DeletePetAsync(petID);
+                var result = await petRepo.DeletePetAsync(userID, petID);
 
                 if (result == "Success")
                 {
@@ -82,5 +84,32 @@ namespace PetCareAndAdoption.Controllers
                 return BadRequest();
             }
         }
+        //[HttpPost("UpdatePet/{petID}")]
+        //public async Task<IActionResult> UpdatePet(string petID, PetModel model, List<ImagePetModel> img, List<HistoryVaccineModel> his, List<NextVaccineModel> next)
+        //{
+        //    try
+        //    {
+        //        var result = await petRepo.UpdatePetAsync(petID, model, img, his, next);
+
+        //        if (result == "Invalid model")
+        //        {
+        //            return BadRequest("Invalid model");
+        //        }
+        //        else if (result == "Pet not found")
+        //        {
+        //            return NotFound("Pet not found");
+        //        }
+        //        else
+        //        {
+        //            return Ok(new { petID = result });
+        //        }
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        // Log the exception for debugging purposes
+        //        Console.WriteLine(ex.Message);
+        //        return StatusCode(500, ex.Message);
+        //    }
+        //}
     }
 }

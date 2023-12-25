@@ -2,7 +2,8 @@
 {
     public class PostIDWithRequestModel
     {
-        public string postID { get; set; }
-        public string[] request { get; set; }
+        public PostAdoptModel postID { get; set; }
+        public List<UserRequestModel> request { get; set; }
+        public string[] Images { get; set; }
     }
 }

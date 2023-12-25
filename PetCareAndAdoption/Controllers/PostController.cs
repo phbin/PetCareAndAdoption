@@ -213,5 +213,18 @@ namespace PetCareAndAdoption.Controllers
                 return StatusCode(500, "An error occurred while processing the request");
             }
         }
+        [HttpPost("CancelRequest")]
+        public async Task<IActionResult> CancelRequest([FromQuery] string postID, [FromQuery] string userID)
+        {
+            try
+            {
+                var result = await postRepo.CancelRequest(postID, userID);
+                return Ok(result);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, "Internal Server Error");
+            }
+        }
     }
 }

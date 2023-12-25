@@ -23,6 +23,7 @@ namespace PetCareAndAdoption.Data
         public DbSet<HistoryVaccine>? HistoryVaccine { get; set; }
         public DbSet<NextVaccine>? NextVaccine { get; set; }
         public DbSet<UserRequest>? UserRequest { get; set; }
+        public DbSet<FavoritePost>? FavoritePost { get; set; }
 
         #endregion
 

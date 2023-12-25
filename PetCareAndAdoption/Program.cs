@@ -18,6 +18,7 @@ using Microsoft.Bot.Builder.Dialogs;
 using PetCareAndAdoption.Bots.Accessories;
 using Microsoft.Extensions.Options;
 using PetCareAndAdoption.Repositories.MyPetRepositories;
+using PetCareAndAdoption.Repositories.FavoriteRepositories;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -75,6 +76,7 @@ builder.Services.AddScoped<IAccountRepository, AccountRepository>();
 builder.Services.AddScoped<IPetTypeRepository, PetTypeRepository>();
 builder.Services.AddScoped<IPostRepository, PostRepository>();
 builder.Services.AddScoped<IPetRepository, PetRepository>();
+builder.Services.AddScoped<IFavoriteRepository, FavoriteRepository>();
 
 builder.Services.AddAuthentication(options =>
 {
@@ -124,7 +126,6 @@ var app = builder.Build();
 if (app.Environment.IsDevelopment())
 {
   
-
 }
 app.UseSwagger();
 app.UseSwaggerUI(c =>
@@ -132,6 +133,7 @@ app.UseSwaggerUI(c =>
     c.SwaggerEndpoint("/swagger/v1/swagger.json", "Pet Care and Adoption API");
     c.RoutePrefix = string.Empty;
 });
+
 app.UseBotFramework();
 
 app.UseHttpsRedirection();

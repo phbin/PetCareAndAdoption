@@ -2,9 +2,12 @@
 using PetCareAndAdoption.Data;
 using PetCareAndAdoption.Models;
 using PetCareAndAdoption.Models.Authentication;
+using PetCareAndAdoption.Models.FavoritePost;
 using PetCareAndAdoption.Models.Pets;
 using PetCareAndAdoption.Models.Posts;
 using PetCareAndAdoption.Models.RequestPost;
+using UserInfoModel = PetCareAndAdoption.Models.UserInfoModel;
+using UserRequestModel = PetCareAndAdoption.Models.RequestPost.UserRequestModel;
 
 namespace PetCareAndAdoption.Helpers
 {
@@ -50,10 +53,13 @@ namespace PetCareAndAdoption.Helpers
                 .ForMember(dest => dest.date, opt => opt.MapFrom(src => src.date))
                 .ForMember(dest => dest.note, opt => opt.MapFrom(src => src.note));
 
-            CreateMap<UserRequestModel, UserRequest>().ReverseMap();
+            CreateMap <UserRequestModel, UserRequest>().ReverseMap();
             CreateMap<UserModel, UserRequest>()
                 .ForMember(dest => dest.userID, opt => opt.MapFrom(src => src.userID));
-
+            CreateMap<FavoritePostModel, FavoritePost>().ReverseMap();
+            CreateMap<AddFavoriteModel, FavoritePost>()
+                .ForMember(dest => dest.postID, opt => opt.MapFrom(src => src.postID))
+                .ForMember(dest => dest.userID, opt => opt.MapFrom(src => src.userID));
         }
     }
 }
