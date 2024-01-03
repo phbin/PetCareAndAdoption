@@ -24,5 +24,7 @@ namespace PetCareAndAdoption.Repositories.PostRepositories
         public Task<List<string>> GetPostIDsByUserAsync(string userID);
         public Task<string> CancelRequest(string postID, string userID);
         public Task<UserInfoModel> GetUser(string userID);
+        public Task<List<GetAllPostModel>> GetPostsByUser(string userID);
+        public Task<string> UpdatePostAsync (string postID, PostUpdateModel model, List<ImagePostModel> img);
     }
 }

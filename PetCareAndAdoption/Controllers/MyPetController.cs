@@ -84,32 +84,32 @@ namespace PetCareAndAdoption.Controllers
                 return BadRequest();
             }
         }
-        //[HttpPost("UpdatePet/{petID}")]
-        //public async Task<IActionResult> UpdatePet(string petID, PetModel model, List<ImagePetModel> img, List<HistoryVaccineModel> his, List<NextVaccineModel> next)
-        //{
-        //    try
-        //    {
-        //        var result = await petRepo.UpdatePetAsync(petID, model, img, his, next);
+        [HttpPut("UpdatePet{petID}")]
+        public async Task<IActionResult> UpdatePet(string petID, [FromBody] PetFullUpdateModel model)
+        {
+            try
+            {
+                var result = await petRepo.UpdatePetAsync(petID, model.PetModel, model.Images, model.History, model.Next);
 
-        //        if (result == "Invalid model")
-        //        {
-        //            return BadRequest("Invalid model");
-        //        }
-        //        else if (result == "Pet not found")
-        //        {
-        //            return NotFound("Pet not found");
-        //        }
-        //        else
-        //        {
-        //            return Ok(new { petID = result });
-        //        }
-        //    }
-        //    catch (Exception ex)
-        //    {
-        //        // Log the exception for debugging purposes
-        //        Console.WriteLine(ex.Message);
-        //        return StatusCode(500, ex.Message);
-        //    }
-        //}
+                if (result == "Invalid model")
+                {
+                    return BadRequest("Invalid model");
+                }
+                else if (result == "Pet not found")
+                {
+                    return NotFound("Pet not found");
+                }
+                else
+                {
+                    return Ok(new { petID = result });
+                }
+            }
+            catch (Exception ex)
+            {
+                // Log the exception for debugging purposes
+                Console.WriteLine(ex.Message);
+                return StatusCode(500, ex.Message);
+            }
+        }
     }
 }

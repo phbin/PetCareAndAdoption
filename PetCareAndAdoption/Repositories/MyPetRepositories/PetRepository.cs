@@ -167,7 +167,7 @@ namespace PetCareAndAdoption.Repositories.MyPetRepositories
             return result;
         }
 
-        public async Task<string> UpdatePetAsync(string petID, PetModel model, List<ImagePetModel> img, List<HistoryVaccineModel> his, List<NextVaccineModel> next)
+        public async Task<string> UpdatePetAsync(string petID, PetUpdateModel model, List<ImagePetModel> img, List<HistoryVaccineModel> his, List<NextVaccineModel> next)
         {
             if (model != null)
             {

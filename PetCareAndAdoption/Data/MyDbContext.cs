@@ -24,6 +24,7 @@ namespace PetCareAndAdoption.Data
         public DbSet<NextVaccine>? NextVaccine { get; set; }
         public DbSet<UserRequest>? UserRequest { get; set; }
         public DbSet<FavoritePost>? FavoritePost { get; set; }
+        public DbSet<Notifications>? Notifications { get; set; }
 
         #endregion
 

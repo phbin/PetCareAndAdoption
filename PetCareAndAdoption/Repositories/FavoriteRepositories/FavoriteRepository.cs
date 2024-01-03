@@ -74,7 +74,7 @@ namespace PetCareAndAdoption.Repositories.FavoriteRepositories
 
                         result.Add(new GetFavoritePostModel
                         {
-                            post = postModel,
+                            postAdoptModel = postModel,
                             Images = imageUrls,
                             favID = favorite.FavId
                         });
@@ -90,12 +90,12 @@ namespace PetCareAndAdoption.Repositories.FavoriteRepositories
             }
         }
 
-        public async Task<string> RemoveFavoriteAsync(string userID, string favId)
+        public async Task<string> RemoveFavoriteAsync(string userID, string postID)
         {
             try
             {
                 var favorite = await _context.FavoritePost!
-                    .FirstOrDefaultAsync(fp => fp.FavId == favId && fp.userID == userID);
+                    .FirstOrDefaultAsync(fp => fp.postID == postID && fp.userID == userID);
 
                 if (favorite != null)
                 {

@@ -53,12 +53,12 @@ namespace PetCareAndAdoption.Controllers
             }
         }
 
-        [HttpDelete("RemoveFavorite/{userID}/{favID}")]
-        public async Task<IActionResult> RemoveFavorite(string userID, string favID)
+        [HttpDelete("RemoveFavorite/{userID}/{postID}")]
+        public async Task<IActionResult> RemoveFavorite(string userID, string postID)
         {
             try
             {
-                var result = await _favoriteRepo.RemoveFavoriteAsync(userID, favID);
+                var result = await _favoriteRepo.RemoveFavoriteAsync(userID, postID);
 
                 if (result == "Success")
                 {

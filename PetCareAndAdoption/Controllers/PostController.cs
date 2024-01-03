@@ -41,16 +41,7 @@ namespace PetCareAndAdoption.Controllers
             }
         }
 
-        [HttpPut("{postID}")]
-        public async Task<IActionResult> UpdatePost(string postID, PostAdoptModel model)
-        {
-            if (postID != model.postID)
-            {
-                return NotFound();
-            }
-            await postRepo.UpdatePostAsync(postID, model);
-            return Ok();
-        }
+       
 
         [HttpDelete("{postID}")]
         public async Task<IActionResult> DeletePost(string postID)
@@ -224,6 +215,34 @@ namespace PetCareAndAdoption.Controllers
             catch (Exception ex)
             {
                 return StatusCode(500, "Internal Server Error");
+            }
+        }
+        [HttpGet("GetPostsByUser{userID}")]
+        public async Task<IActionResult> GetPostsByUser(string userID)
+        {
+            var result = await postRepo.GetPostsByUser(userID);
+            return result == null ? NotFound() : Ok(result);
+        }
+        [HttpPut("{postID}")]
+        public async Task<IActionResult> UpdatePost(string postID, [FromBody] PostFullUpdateModel model)
+        {
+            try
+            {
+                var result = await postRepo.UpdatePostAsync(postID, model.PostModel, model.Images);
+
+                if (!string.IsNullOrEmpty(result))
+                {
+                    return Ok(new { PostID = result });
+                }
+                else
+                {
+                    return NotFound(); 
+                }
+            }
+            catch (Exception ex)
+            {
+                // Log the exception
+                return StatusCode(500, "Internal server error");
             }
         }
     }

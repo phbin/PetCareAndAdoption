@@ -210,7 +210,7 @@ namespace PetCareAndAdoption.Repositories.PostRepositories
         public async Task<List<GetAllPostModel>> GetAllPostsAsync(string userID)
         {
             var posts = await _context.PetPosts!
-                .Where(post => !post.isDone)
+                .Where(post => !post.isDone && post.userID != userID)
                 .ToListAsync();
             var result = new List<GetAllPostModel>();
 
@@ -223,7 +223,8 @@ namespace PetCareAndAdoption.Repositories.PostRepositories
                 {
                     continue;
                 }
-
+                var fav = await _context.FavoritePost!
+                      .AnyAsync(img => img.postID == post.postID);
                 var imageEntities = await _context.ImagePost!
                     .Where(img => img.postID == post.postID)
                     .ToListAsync();
@@ -240,6 +241,7 @@ namespace PetCareAndAdoption.Repositories.PostRepositories
                 {
                     PostAdoptModel = postModel,
                     Images = imageUrls,
+                    isFav = fav,
                     request = requestUser
                 });
             }
@@ -358,8 +360,8 @@ namespace PetCareAndAdoption.Repositories.PostRepositories
                         users.Add(new UserRequestModel
                         {
                             userID = userId,
-                            name=user.name,
-                            avatar=user.avatar
+                            name = user.name,
+                            avatar = user.avatar
                         });
                     }
                     var imageEntities = await _context.ImagePost!
@@ -370,7 +372,7 @@ namespace PetCareAndAdoption.Repositories.PostRepositories
                     result.Add(new PostIDWithRequestModel
                     {
                         postID = _mapper.Map<PostAdoptModel>(post),
-                        Images= imageUrls,
+                        Images = imageUrls,
                         request = users
                     });
 
@@ -424,6 +426,81 @@ namespace PetCareAndAdoption.Repositories.PostRepositories
                 avatar = postIDs.avatar
             };
             return user;
+        }
+
+        public async Task<List<GetAllPostModel>> GetPostsByUser(string userID)
+        {
+            var posts = await _context.PetPosts!
+                          .Where(post => !post.isDone && post.userID == userID)
+                          .ToListAsync();
+            var result = new List<GetAllPostModel>();
+
+            foreach (var post in posts)
+            {
+                var imageEntities = await _context.ImagePost!
+                    .Where(img => img.postID == post.postID)
+                    .ToListAsync();
+                var imageUrls = imageEntities.Select(img => img.image).ToArray();
+
+                var request = await _context.UserRequest!
+                   .Where(img => img.postID == post.postID)
+                   .ToListAsync();
+                var requestUser = request.Select(img => img.userID).ToArray();
+
+                var postModel = _mapper.Map<PostAdoptModel>(post);
+
+                result.Add(new GetAllPostModel
+                {
+                    PostAdoptModel = postModel,
+                    Images = imageUrls,
+                    request = requestUser
+                });
+            }
+            return result;
+        }
+
+        public async Task<string> UpdatePostAsync(string postID, PostUpdateModel model, List<ImagePostModel> img)
+        {
+
+            var existingPost = await _context.PetPosts!.FindAsync(postID);
+
+            if (existingPost != null)
+            {
+                existingPost.petName = model.petName;
+                existingPost.sex = model.sex;
+                existingPost.species = model.species;
+                existingPost.breed = model.breed;
+                existingPost.age = model.age;
+                existingPost.weight = model.weight;
+                existingPost.district = model.district;
+                existingPost.province = model.province;
+                existingPost.description = model.description;
+                existingPost.isVaccinated = model.isVaccinated;
+                existingPost.isAdopt = model.isAdopt;
+
+                _context.PetPosts.Update(existingPost);
+                await _context.SaveChangesAsync();
+
+                var existingImages = await _context.ImagePost!.Where(img => img.postID == postID).ToListAsync();
+                _context.ImagePost!.RemoveRange(existingImages);
+
+                var newImages = img.Select(i => new ImagePost
+                {
+                    imgPostID = Guid.NewGuid().ToString(),
+                    postID = postID,
+                    image = i.image,
+                });
+
+                _context.ImagePost.AddRange(newImages);
+
+                await _context.SaveChangesAsync();
+
+                return "Update post success!";
+            }
+            else
+            {
+                return "Post with the given ID not found"; 
+            }
         }
     }
 }
