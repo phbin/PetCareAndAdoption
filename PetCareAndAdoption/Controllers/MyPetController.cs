@@ -84,7 +84,7 @@ namespace PetCareAndAdoption.Controllers
                 return BadRequest();
             }
         }
-        [HttpPut("UpdatePet{petID}")]
+        [HttpPut("UpdatePet/{petID}")]
         public async Task<IActionResult> UpdatePet(string petID, [FromBody] PetFullUpdateModel model)
         {
             try

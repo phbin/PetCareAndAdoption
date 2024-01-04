@@ -3,6 +3,7 @@ using PetCareAndAdoption.Data;
 using PetCareAndAdoption.Models;
 using PetCareAndAdoption.Models.Authentication;
 using PetCareAndAdoption.Models.FavoritePost;
+using PetCareAndAdoption.Models.Notification;
 using PetCareAndAdoption.Models.Pets;
 using PetCareAndAdoption.Models.Posts;
 using PetCareAndAdoption.Models.RequestPost;
@@ -16,6 +17,7 @@ namespace PetCareAndAdoption.Helpers
         public ApplicationMapper()
         {
             CreateMap<UserInfo, UserInfoModel>().ReverseMap();
+
             CreateMap<SignUpModel, UserInfo>()
           .ForMember(dest => dest.name, opt => opt.MapFrom(src => src.Name))
           .ForMember(dest => dest.userID, opt => opt.MapFrom(src => src.PhoneNumber))
@@ -60,6 +62,7 @@ namespace PetCareAndAdoption.Helpers
             CreateMap<AddFavoriteModel, FavoritePost>()
                 .ForMember(dest => dest.postID, opt => opt.MapFrom(src => src.postID))
                 .ForMember(dest => dest.userID, opt => opt.MapFrom(src => src.userID));
+            CreateMap<Notifications, NotificationModel>().ReverseMap();
         }
     }
 }

@@ -19,6 +19,7 @@ using PetCareAndAdoption.Bots.Accessories;
 using Microsoft.Extensions.Options;
 using PetCareAndAdoption.Repositories.MyPetRepositories;
 using PetCareAndAdoption.Repositories.FavoriteRepositories;
+using PetCareAndAdoption.Repositories.NotificationRepositories;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -77,6 +78,7 @@ builder.Services.AddScoped<IPetTypeRepository, PetTypeRepository>();
 builder.Services.AddScoped<IPostRepository, PostRepository>();
 builder.Services.AddScoped<IPetRepository, PetRepository>();
 builder.Services.AddScoped<IFavoriteRepository, FavoriteRepository>();
+builder.Services.AddScoped<INotificationRepository, NotificationRepository>();
 
 builder.Services.AddAuthentication(options =>
 {
