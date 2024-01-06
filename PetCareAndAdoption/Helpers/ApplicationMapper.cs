@@ -63,6 +63,8 @@ namespace PetCareAndAdoption.Helpers
                 .ForMember(dest => dest.postID, opt => opt.MapFrom(src => src.postID))
                 .ForMember(dest => dest.userID, opt => opt.MapFrom(src => src.userID));
             CreateMap<Notifications, NotificationModel>().ReverseMap();
+            CreateMap<UserToken, UserTokenModel>().ReverseMap();
+
         }
     }
 }

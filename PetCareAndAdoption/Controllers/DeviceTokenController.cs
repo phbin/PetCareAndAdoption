@@ -20,21 +20,17 @@ namespace PetCareAndAdoption.Controllers
             _notiRepo = notiRepo;
         }
         [HttpPost("UpdateToken")]
-        public async Task<IActionResult> UpdateToken(string userID, string token )
+        public async Task<IActionResult> UpdateToken(string userID, string token)
         {
             try
             {
                 var result = await _notiRepo.SaveTokenToUser(userID, token);
 
-                if (result == "Token updated successfully")
+                if (result == "Success")
                 {
                     return Ok("Token updated successfully");
                 }
-                else if (result == "Token already exists")
-                {
-                    return BadRequest(result);
-                }
-                else 
+                else
                 {
                     return NotFound(result);
                 }
@@ -66,6 +62,34 @@ namespace PetCareAndAdoption.Controllers
             try
             {
                 var result = await _notiRepo.UpdateNotification(model.title, model.content, model.senderID, model.receiverID);
+                return Ok(result);
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.Message);
+                return StatusCode(500, "Internal server error");
+            }
+        }
+        [HttpGet("GetTokenByUser")]
+        public async Task<IActionResult> GetTokenByUser(string userID)
+        {
+            try
+            {
+                var result = await _notiRepo.GetUserToken(userID);
+                return Ok(result);
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.Message);
+                return StatusCode(500, "Internal server error");
+            }
+        }
+        [HttpPost("NotiRead")]
+        public async Task<IActionResult> NotiRead(string notiID)
+        {
+            try
+            {
+                var result = await _notiRepo.ReadNoti(notiID);
                 return Ok(result);
             }
             catch (Exception ex)

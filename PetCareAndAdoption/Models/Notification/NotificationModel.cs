@@ -7,5 +7,6 @@
         public string content { get; set; }
         public string senderID { get; set; }
         public string receiverID { get; set; }
+        public bool isRead { get; set; }
     }
 }

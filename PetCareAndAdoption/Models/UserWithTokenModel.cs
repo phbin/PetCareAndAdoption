@@ -8,6 +8,5 @@
         public string province { get; set; }
         public string avatar { get; set; }
         public string password { get; set; }
-        public string token { get; set; }
     }
 }

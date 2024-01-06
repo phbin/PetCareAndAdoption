@@ -25,6 +25,7 @@ namespace PetCareAndAdoption.Data
         public DbSet<UserRequest>? UserRequest { get; set; }
         public DbSet<FavoritePost>? FavoritePost { get; set; }
         public DbSet<Notifications>? Notifications { get; set; }
+        public DbSet<UserToken>? UserToken { get; set; }
 
         #endregion
 

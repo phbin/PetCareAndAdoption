@@ -90,7 +90,6 @@ namespace PetCareAndAdoption.Repositories
         {
             if (userID == model.userID)
             {
-                // Lấy thông tin người dùng từ cơ sở dữ liệu
                 var existingUser = await _context.Users
                                           .FirstOrDefaultAsync(u => u.userID == userID);
 
