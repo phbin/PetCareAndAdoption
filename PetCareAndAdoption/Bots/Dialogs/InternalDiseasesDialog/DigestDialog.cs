@@ -32,15 +32,15 @@ namespace PetCareAndAdoption.Bots.Dialogs.InternalDiseasesDialog
             var userQuestion = stepContext.Result.ToString().Trim().ToLower();
             string response = "";
 
-            if (userQuestion.Contains("What cause digest issue"))
+            if (userQuestion.Contains("What")&& userQuestion.Contains("cause"))
             {
                 response = "Digestive issues in pets can be caused by factors such as dietary changes, food allergies, infections, or underlying health conditions. Identifying the root cause is crucial for effective treatment.";
             }
-            else if (userQuestion.Contains("balance diet important"))
+            else if (userQuestion.Contains("diet") && userQuestion.Contains("important"))
             {
                 response = "A balanced diet is crucial for maintaining optimal digestive health in pets. It ensures they receive essential nutrients, proper fiber, and the right balance of proteins and fats to support overall well-being.";
             }
-            else if (userQuestion.Contains("give pet human food")) 
+            else if (userQuestion.Contains("human food")) 
             {
                 response = "While some human foods are safe for pets, it's generally recommended to stick to pet-specific diets to ensure they receive the right nutrients in proper proportions. Certain human foods can be harmful to pets.";
             }

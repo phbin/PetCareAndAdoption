@@ -502,5 +502,42 @@ namespace PetCareAndAdoption.Repositories.PostRepositories
                 return "Post with the given ID not found"; 
             }
         }
+
+        public async Task<GetAllPostModel> GetPostDetailAsync(GetPostByBotModel model)
+        {
+            var posts = await _context.PetPosts!
+                            .Where(post => !post.isDone && post.userID != model.userID && post.species==model.species && post.sex==model.sex && post.age==model.age)
+                            .ToListAsync();
+            if (posts.Any())
+            {
+                // Randomly select one post
+                var randomPost = posts.OrderBy(p => Guid.NewGuid()).FirstOrDefault();
+
+                var fav = await _context.FavoritePost!.AnyAsync(img => img.postID == randomPost!.postID);
+                var imageEntities = await _context.ImagePost!
+                    .Where(img => img.postID == randomPost!.postID)
+                    .ToListAsync();
+                var imageUrls = imageEntities.Select(img => img.image).ToArray();
+
+                var request = await _context.UserRequest!
+                   .Where(img => img.postID == randomPost!.postID)
+                   .ToListAsync();
+                var requestUser = request.Select(img => img.userID).ToArray();
+
+                var postModel = _mapper.Map<PostAdoptModel>(randomPost);
+
+                var result = new GetAllPostModel
+                {
+                    PostAdoptModel = postModel,
+                    Images = imageUrls,
+                    isFav = fav,
+                    request = requestUser
+                };
+
+                return result;
+            }
+
+            return null;
+        }
     }
 }

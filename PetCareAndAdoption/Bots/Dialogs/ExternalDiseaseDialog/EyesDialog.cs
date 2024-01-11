@@ -3,76 +3,86 @@ using PetCareAndAdoption.Helpers;
 
 namespace PetCareAndAdoption.Bots.Dialogs.ExternalDiseaseDialog
 {
-    public class EyesDialog : WaterfallDialog
+    public class EyesDialog : ComponentDialog
     {
-        public EyesDialog(string dialogId, IEnumerable<WaterfallStep> steps = null) : base(dialogId, steps)
+        public EyesDialog(string dialogId)
+            : base(dialogId)
         {
-            AddStep(async (stepContext, cancellationToken) =>
+            AddDialog(new TextPrompt("textPrompt"));
+
+            AddDialog(new WaterfallDialog("eyeHealthDialog", new WaterfallStep[]
             {
-                return await stepContext.PromptAsync("textPrompt",
-                    new PromptOptions
-                    {
+                AskQuestion,
+                ProcessAnswer
+            }));
 
-                        Prompt = stepContext.Context.Activity.CreateReply("Chúng tôi có các loại hoa như sau:  \n " +
-                        "Tulip: 70k/cành  \n" +
-                        "Linh lan: 150k/cành  \n" +
-                        "Hồng: 50k/cành  \n" +
-                        "Bạn muốn mua loại hoa nào?")
-                    });
+            InitialDialogId = "eyeHealthDialog";
+        }
+
+        private async Task<DialogTurnResult> AskQuestion(WaterfallStepContext stepContext, CancellationToken cancellationToken)
+        {
+            return await stepContext.PromptAsync("textPrompt", new PromptOptions
+            {
+                Prompt = stepContext.Context.Activity.CreateReply("What do you want to know about your pet's EYES?")
             });
+        }
 
-            //AddStep(async (stepContext, cancellationToken) =>
-            //{
-            //    var state = await (stepContext.Context.TurnState["BotAccessors"] as BotAccessors).FlowerShopStateStateAccessor.GetAsync(stepContext.Context);
-            //    state.Amount = stepContext.Result.ToString();
+        private async Task<DialogTurnResult> ProcessAnswer(WaterfallStepContext stepContext, CancellationToken cancellationToken)
+        {
+            var userQuestion = stepContext.Result.ToString().Trim().ToLower();
+            string response = GetCommonResponse(userQuestion);
 
-            //    return await stepContext.PromptAsync("textPrompt",
-            //        new PromptOptions
-            //        {
-            //            Prompt = stepContext.Context.Activity.CreateReply($"Tôi xin xác nhận bạn muốn mua {state.Amount}, cho tôi xin tên của bạn?"),
-            //        });
+            await stepContext.Context.SendActivityAsync(response);
 
-            //});
+            return await stepContext.ReplaceDialogAsync(InitialDialogId, cancellationToken);
+        }
 
-            //AddStep(async (stepContext, cancellationToken) =>
-            //{
-            //    var state = await (stepContext.Context.TurnState["BotAccessors"] as BotAccessors).FlowerShopStateStateAccessor.GetAsync(stepContext.Context);
-            //    state.Name = stepContext.Result.ToString();
-
-            //    return await stepContext.PromptAsync("numberPrompt",
-            //        new PromptOptions
-            //        {
-            //            Prompt = stepContext.Context.Activity.CreateReply($"{state.Name}, cho tôi số điện thoại liên lạc nhé?"),
-            //            RetryPrompt = stepContext.Context.Activity.CreateReply("Xin lỗi, hãy cung cấp cho chúng tôi số điện thoại của bạn")
-            //        });
-
-            //});
-            //AddStep(async (stepContext, cancellationToken) =>
-            //{
-            //    var state = await (stepContext.Context.TurnState["BotAccessors"] as BotAccessors).FlowerShopStateStateAccessor.GetAsync(stepContext.Context);
-            //    state.PhoneNumber = int.Parse(stepContext.Result.ToString());
-
-            //    return await stepContext.PromptAsync("textPrompt",
-            //        new PromptOptions
-            //        {
-            //            Prompt = stepContext.Context.Activity.CreateReply($"{state.Name}, vui lòng cho tôi địa chỉ của bạn."),
-            //        });
-            //});
-
-            //AddStep(async (stepContext, cancellationToken) =>
-            //{
-            //    var state = await (stepContext.Context.TurnState["BotAccessors"] as BotAccessors).FlowerShopStateStateAccessor.GetAsync(stepContext.Context);
-            //    state.Address = stepContext.Result.ToString();
-
-            //    await stepContext.Context.SendActivityAsync($"Tôi xin xác nhận lại thông tin  \n" +
-            //        $"Bạn muốn mua {state.Amount}  \n" +
-            //        $"Khách hàng {state.Name}  \n" +
-            //        $"Số điện thoại:  {state.PhoneNumber}  \n" +
-            //        $"Địa chỉ:  {state.Address}  \n" +
-            //        $"Cảm ơn bạn đã sử dụng dịch vụ của chúng tôi! Vui lòng kiểm tra điện thoại để chắc rằng hoa được giao đúng thời điểm!  \n" +
-            //        $"Hẹn gặp lại! 💸");
-            //    return await stepContext.EndDialogAsync();
-            //});
+        private string GetCommonResponse(string userQuestion)
+        {
+            if (userQuestion.Contains("clean my pet's eyes"))
+            {
+                return "Regular eye cleaning is necessary for pets with tear staining or discharge. Use a moist cotton ball to gently wipe away debris, and consult your veterinarian if you notice persistent issues.";
+            }
+            else if (userQuestion.Contains("eye infections"))
+            {
+                return "Yes, pets can develop eye infections caused by bacteria, viruses, or foreign objects. Signs include redness, discharge, squinting, or excessive tearing. Consult your vet for proper diagnosis and treatment.";
+            }
+            else if (userQuestion.Contains("normal for my pet to have sleep in their eyes"))
+            {
+                return "Occasional eye discharge, often referred to as 'sleep' or 'eye boogers,' is normal. However, persistent or colored discharge may indicate an underlying issue and should be checked by a veterinarian.";
+            }
+            else if (userQuestion.Contains("cause redness in my pet's eyes"))
+            {
+                return "Redness in a pet's eyes may be caused by various factors, including infections, allergies, or irritants. Consult with your veterinarian for an accurate diagnosis and appropriate treatment.";
+            }
+            else if (userQuestion.Contains("prevent tear staining in my pet"))
+            {
+                return "Regularly clean the area around your pet's eyes to prevent tear staining. Additionally, addressing the underlying cause, such as blocked tear ducts or allergies, can help minimize staining.";
+            }
+            else if (userQuestion.Contains("cats develop cataracts"))
+            {
+                return "Yes, pets can develop cataracts. Treatment may involve surgical removal of the cataract, but the decision depends on factors such as the pet's overall health and the impact on vision.";
+            }
+            else if (userQuestion.Contains("common signs of eye injuries in pets"))
+            {
+                return "Signs of eye injuries include squinting, pawing at the eye, tearing, swelling, and changes in eye color. Seek immediate veterinary attention for any suspected eye injury.";
+            }
+            else if (userQuestion.Contains("breeds more prone to eye issues"))
+            {
+                return "Some breeds are predisposed to certain eye conditions. For example, brachycephalic breeds may be prone to issues like corneal ulcers. Regular veterinary check-ups are important for early detection.";
+            }
+            else if (userQuestion.Contains("seasonal allergies affecting their eyes"))
+            {
+                return "Yes, pets can experience seasonal allergies that affect their eyes, leading to symptoms like redness, itching, and tearing. Your veterinarian can recommend appropriate treatments.";
+            }
+            else if (userQuestion.Contains("administer eye drops to my pet"))
+            {
+                return "To administer eye drops, gently restrain your pet, tilt their head back, and carefully apply the drops to the lower eyelid. Be cautious and reward your pet afterward for positive reinforcement. If unsure, consult your veterinarian for guidance.";
+            }
+            else
+            {
+                return "I'm sorry, I couldn't understand your question. Please feel free to ask something else.";
+            }
         }
         public static string Id => "checkEyesDialog";
         public static EyesDialog Instance { get; } = new EyesDialog(Id);

@@ -245,5 +245,18 @@ namespace PetCareAndAdoption.Controllers
                 return StatusCode(500, "Internal server error");
             }
         }
+        [HttpPost("GetPostByBot")]
+        public async Task<IActionResult> GetPostByBot(GetPostByBotModel model)
+        {
+            try
+            {
+                var posts = await postRepo.GetPostDetailAsync(model);
+                return Ok(posts);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, "Internal Server Error");
+            }
+        }
     }
 }
