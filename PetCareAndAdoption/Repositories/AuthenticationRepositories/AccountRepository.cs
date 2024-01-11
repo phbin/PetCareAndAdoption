@@ -49,7 +49,6 @@ namespace PetCareAndAdoption.Repositories.AuthenticationRepositories
             }
             else
             {
-                // Thực hiện gửi OTP
                 var otp = GenerateRandomOTP();
                 SendOTPToPhoneNumber(phoneNumber, otp);
 
@@ -64,8 +63,6 @@ namespace PetCareAndAdoption.Repositories.AuthenticationRepositories
 
             if (enteredOtp == savedOtp)
             {
-                // Kiểm tra mật khẩu và xác nhận mật khẩu
-
                 _memoryCache.Remove($"ChangePasswordOTP_{phoneNumber}");
 
                 return IdentityResult.Success;
@@ -78,7 +75,7 @@ namespace PetCareAndAdoption.Repositories.AuthenticationRepositories
             var user = await userManager.FindByNameAsync(phoneNumber);
             var token = await userManager.GeneratePasswordResetTokenAsync(user);
             var result = await userManager.ResetPasswordAsync(user, token, newPassword);
-            var updateUser = await _context.Users.FirstOrDefaultAsync(u => u.userID == phoneNumber);
+            var updateUser = await _context.Users!.FirstOrDefaultAsync(u => u.userID == phoneNumber);
 
             if (updateUser != null)
             {
@@ -105,21 +102,21 @@ namespace PetCareAndAdoption.Repositories.AuthenticationRepositories
             {
                 return string.Empty;
             }
-            var authClaims = new List<Claim>
-            {
-                new Claim(ClaimTypes.MobilePhone, model.PhoneNumber),
-                new Claim(Microsoft.IdentityModel.JsonWebTokens.JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString())
-            };
-            var authenKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(configuration["JWT:Secret"]));
-            var token = new JwtSecurityToken(
-                issuer: configuration["JWT:ValidIssuer"],
-                audience: configuration["JWT:ValidAudience"],
-                expires: DateTime.Now.AddMinutes(30),
-                claims: authClaims,
-                signingCredentials: new SigningCredentials(authenKey,
-                SecurityAlgorithms.HmacSha512Signature)
-                );
-            var user = await _context.Users.FirstOrDefaultAsync(u => u.userID == model.PhoneNumber);
+            //var authClaims = new List<Claim>
+            //{
+            //    new Claim(ClaimTypes.MobilePhone, model.PhoneNumber),
+            //    new Claim(Microsoft.IdentityModel.JsonWebTokens.JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString())
+            //};
+            //var authenKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(configuration["JWT:Secret"]));
+            //var token = new JwtSecurityToken(
+            //    issuer: configuration["JWT:ValidIssuer"],
+            //    audience: configuration["JWT:ValidAudience"],
+            //    expires: DateTime.Now.AddMinutes(30),
+            //    claims: authClaims,
+            //    signingCredentials: new SigningCredentials(authenKey,
+            //    SecurityAlgorithms.HmacSha512Signature)
+            //    );
+            var user = await _context.Users!.FirstOrDefaultAsync(u => u.userID == model.PhoneNumber);
 
             if (user == null)
             {
@@ -135,7 +132,7 @@ namespace PetCareAndAdoption.Repositories.AuthenticationRepositories
                     avatar = user.avatar,
                     name = user.name,
                 },
-                token = new JwtSecurityTokenHandler().WriteToken(token),
+                //token = new JwtSecurityTokenHandler().WriteToken(token),
 
             };
             var jsonResponse = JsonConvert.SerializeObject(userResponse);

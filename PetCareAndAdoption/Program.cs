@@ -20,6 +20,9 @@ using Microsoft.Extensions.Options;
 using PetCareAndAdoption.Repositories.MyPetRepositories;
 using PetCareAndAdoption.Repositories.FavoriteRepositories;
 using PetCareAndAdoption.Repositories.NotificationRepositories;
+using PetCareAndAdoption.Bots.Dialogs.InternalDiseasesDialog;
+using PetCareAndAdoption.Bots.Dialogs;
+using PetCareAndAdoption.Dialogs;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -60,8 +63,8 @@ builder.Services.AddCors(options => options.AddDefaultPolicy(policy=>
 policy.AllowAnyOrigin().AllowAnyHeader().AllowAnyHeader()));
 builder.Services.AddAuthorization(options =>
 {
-    options.AddPolicy("RequireAdminRole", policy =>
-        policy.RequireRole("Admin"));
+    //options.AddPolicy("RequireAdminRole", policy =>
+    //    policy.RequireRole("Admin"));
 });
 builder.Services.AddIdentity<ApplicationUser,IdentityRole>()
     .AddEntityFrameworkStores<MyDbContext>().AddDefaultTokenProviders();
@@ -106,7 +109,10 @@ builder.Services.AddBot<BotService>(options =>
 
     var conversationState = new ConversationState(new MemoryStorage());
     options.State.Add(conversationState);
-
+    var botAccessors = new BotAccessors(conversationState)
+    {
+        DialogStateAccessor = conversationState.CreateProperty<DialogState>(BotAccessors.DialogStateAccessorName),
+    };
 });
 
 builder.Services.AddSingleton(serviceProvider =>
@@ -117,7 +123,7 @@ builder.Services.AddSingleton(serviceProvider =>
     var accessors = new BotAccessors(conversationState)
     {
         DialogStateAccessor = conversationState.CreateProperty<DialogState>(BotAccessors.DialogStateAccessorName),
-        //FlowerShopStateStateAccessor = conversationState.CreateProperty<FlowerShopState>(BotAccessors.FlowerShopBotStateAccessorName)
+        PetBotStateAccessor = conversationState.CreateProperty<FindPetState>(BotAccessors.PetBotStateAccessorName)
     };
 
     return accessors;

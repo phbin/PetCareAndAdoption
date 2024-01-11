@@ -133,5 +133,21 @@ namespace PetCareAndAdoption.Repositories.NotificationRepositories
                 return "Notification not found";
             }
         }
+
+        public async Task<string> RemoveToken(string userID, string token)
+        {
+            var noti = await _context.UserToken!.SingleOrDefaultAsync(u => u.userID == userID && u.token==token);
+            
+            if(noti != null)
+            {
+                _context.Remove(noti);
+                await _context.SaveChangesAsync();
+                return "Remove done";
+            }
+            else
+            {
+                return "User and token do not match";
+            }
+        }
     }
 }

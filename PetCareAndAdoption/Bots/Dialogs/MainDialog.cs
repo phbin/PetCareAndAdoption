@@ -14,7 +14,7 @@ namespace PetCareAndAdoption.Dialogs
                     new PromptOptions
                     {
                         Prompt = stepContext.Context.Activity.CreateReply("What issue would you like advice on for your pet?"),
-                        Choices = new[] { new Choice { Value = "Internal" }, new Choice { Value = "External" }
+                        Choices = new[] { new Choice { Value = "Internal" }, new Choice { Value = "External" }, new Choice {Value="Find Pet"}
                         }.ToList()
                     });
             });
@@ -29,6 +29,10 @@ namespace PetCareAndAdoption.Dialogs
                 if (response == "External")
                 {
                     return await stepContext.BeginDialogAsync(SubExternalDialog.Id);
+                }
+                if(response=="Find Pet")
+                {
+                    return await stepContext.BeginDialogAsync(FindPetPostDialog.Id);
                 }
                 return await stepContext.NextAsync();
             });

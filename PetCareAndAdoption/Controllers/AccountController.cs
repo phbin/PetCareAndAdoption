@@ -56,14 +56,12 @@ namespace PetCareAndAdoption.Controllers
         {
             var result = await accountRepo.CheckPhoneNumberAsync(phoneNumber);
 
-            // Kiểm tra xem hàm CheckPhoneNumberAsync có thành công hay không
             if (result.Succeeded)
             {
                 return Ok(new { Message = "OTP sent successfully." });
             }
             else
             {
-                // Trả về lỗi với mô tả từ IdentityResult
                 return BadRequest(new { Error = result.Errors.FirstOrDefault()?.Description });
             }
         }
@@ -78,7 +76,6 @@ namespace PetCareAndAdoption.Controllers
             }
             else
             {
-                // Trả về lỗi với mô tả từ IdentityResult
                 return BadRequest(new { Error = result.Errors.FirstOrDefault()?.Description });
             }
         }
@@ -93,7 +90,6 @@ namespace PetCareAndAdoption.Controllers
             }
             else
             {
-                // Trả về lỗi với mô tả từ IdentityResult
                 return BadRequest(new { Error = result.Errors.FirstOrDefault()?.Description });
             }
         }

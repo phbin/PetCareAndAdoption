@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.JSInterop.Infrastructure;
 using PetCareAndAdoption.Data;
 using PetCareAndAdoption.Migrations;
 using PetCareAndAdoption.Models.Notification;
@@ -91,6 +92,27 @@ namespace PetCareAndAdoption.Controllers
             {
                 var result = await _notiRepo.ReadNoti(notiID);
                 return Ok(result);
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.Message);
+                return StatusCode(500, "Internal server error");
+            }
+        }
+        [HttpPost("RemoveToken")]
+        public async Task<IActionResult> RemoveToken(string userID, string token)
+        {
+            try
+            {
+                var result = await _notiRepo.RemoveToken(userID,token);
+                if(result=="Remove done")
+                {
+                    return Ok(result);
+                }
+                else
+                {
+                    return BadRequest(result); 
+                }
             }
             catch (Exception ex)
             {

@@ -3,13 +3,15 @@ using Microsoft.Bot.Builder.Dialogs;
 using Microsoft.Bot.Schema;
 using PetCareAndAdoption.Bots.Dialogs;
 using PetCareAndAdoption.Bots.Dialogs.ExternalDiseaseDialog;
+using PetCareAndAdoption.Bots.Dialogs.FindPetDialog.SexDialog;
+using PetCareAndAdoption.Bots.Dialogs.FindPetDialog.SpeciesDialog;
 using PetCareAndAdoption.Bots.Dialogs.InternalDiseasesDialog;
 using PetCareAndAdoption.Dialogs;
 using PetCareAndAdoption.Helpers;
 
 namespace PetCareAndAdoption.Bots.Accessories
 {
-    public class BotService:IBot
+    public class BotService : IBot
     {
         private readonly DialogSet dialogs;
 
@@ -31,6 +33,10 @@ namespace PetCareAndAdoption.Bots.Accessories
             dialogs.Add(TraumaDialog.Instance);
             dialogs.Add(UrinaryDialog.Instance);
             dialogs.Add(VaccinationDialog.Instance);
+            dialogs.Add(FindPetPostDialog.Instance);
+            dialogs.Add(ResultDialog.Instance);
+            dialogs.Add(SexDialog.Instance);
+
             dialogs.Add(new ChoicePrompt("choicePrompt"));
             dialogs.Add(new TextPrompt("textPrompt"));
             dialogs.Add(new NumberPrompt<int>("numberPrompt"));
@@ -39,10 +45,14 @@ namespace PetCareAndAdoption.Bots.Accessories
 
         public BotAccessors BotAccessors { get; }
 
-   public async Task OnTurnAsync(ITurnContext turnContext, CancellationToken cancellationToken = default)
+        public async Task OnTurnAsync(ITurnContext turnContext, CancellationToken cancellationToken = default)
         {
             if (turnContext.Activity.Type == ActivityTypes.Message)
             {
+                // initialize state if necessary
+                var state = await BotAccessors.PetBotStateAccessor.GetAsync(turnContext, () => new FindPetState(), cancellationToken); 
+                turnContext.TurnState.Add("BotAccessors", BotAccessors);
+
                 var dialogCtx = await dialogs.CreateContextAsync(turnContext, cancellationToken);
 
                 if (dialogCtx.ActiveDialog == null)
@@ -56,28 +66,6 @@ namespace PetCareAndAdoption.Bots.Accessories
 
                 await BotAccessors.ConversationState.SaveChangesAsync(turnContext, false, cancellationToken);
             }
-
-            //if (turnContext.Activity.Type == ActivityTypes.ConversationUpdate)
-            //{           
-            //    var dialogCtx = await dialogs.CreateContextAsync(turnContext, cancellationToken);
-
-            //    var activity = turnContext.Activity.AsConversationUpdateActivity();
-            //    if (activity.MembersAdded != null)
-            //    {
-            //        foreach (var member in activity.MembersAdded)
-            //        {
-            //            if (member.Id != turnContext.Activity.Recipient.Id)
-            //            {
-            //                 await dialogCtx.BeginDialogAsync(MainDialog.Id, cancellationToken: cancellationToken);
-
-            //                // Bot chào mừng khi được thêm vào cuộc trò chuyện
-            //                //await turnContext.SendActivityAsync($"Hello {member.Name}! How can I help you?");
-            //            }
-            //        }
-            //    }
-            //      await BotAccessors.ConversationState.SaveChangesAsync(turnContext, false, cancellationToken);
-
-            //}
         }
     }
 }
